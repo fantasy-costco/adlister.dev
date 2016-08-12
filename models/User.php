@@ -1,63 +1,73 @@
 <?php
 
-// Create a User class that extends Model. Create insert, update, erase, find, and all methods to interact with the database and return results to the user. Use prepared statements and bind values to all variables for your queries.
-
-// __DIR__ is a *magic constant* with the directory path containing this file. This allows us to correctly require_once Model.php, no matter where this file is being required from.
-
 require_once __DIR__ . '/Model.php';
 
 class User extends Model {
 
 	protected function insert() {
-		$insert = "INSERT INTO users (email, username, password) VALUES (:email, :username, :password)";
+		$insert = "INSERT INTO users (first_name, last_name, current_balance, email, username, password, admin) VALUES (:first_name, :last_name, :current_balance, :email, :username, :password, :admin)";
 		$stmt = self::$dbc->prepare($insert);
-		$this->bindValuesAndExecuteQuery($stmt);
-		$this->attributes['id'] = self::$dbc->lastInsertId();
+		foreach ($this->attributes as $attribute => $value) {
+			if ($attribute == "current_balance") {
+				$stmt->bindValue(':current_balance', 2000, PDO::PARAM_INT);
+			} elseif ($attribute == "admin") {
+				$stmt->bindValue(':admin', 0, PDO::PARAM_INT);
+			} else {
+				$stmt->bindValue(':$attribute', $value, PDO::PARAM_STR);
+			}
+			$stmt->execute();
+		}
+		$this->attributes['user_id'] = self::$dbc->lastInsertId();
 	}
 
 	protected function update() {
-		$update = "UPDATE users SET email = :email, username = :username, password = :password WHERE id = :id";
+		$update = "UPDATE users SET first_name = :first_name, last_name = :last_name, current_balance = :current_balance, email = :email, username = :username, password = :password, admin = :admin WHERE user_id = :user_id";
 		$stmt = self::$dbc->prepare($update);
 		$this->bindValuesAndExecuteQuery($stmt);
 	}
 
-	protected function erase() {
-		$erase = "DELETE FROM users WHERE id = :id";
+	protected function delete() {
+		$erase = "DELETE FROM users WHERE user_id = :user_id";
 		$stmt = self::$dbc->prepare($erase);
-		$stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);
+		$stmt->bindValue(':user_id', $this->attributes['user_id'], PDO::PARAM_INT);
 		$stmt->execute();
 	}
 
-	public static function find($id) {
+	public static function find($user_id) {
 		self::dbConnect();
-		$find = "SELECT * FROM users WHERE id = :id";
+		$find = "SELECT * FROM users WHERE user_id = :user_id";
 		$stmt = self::$dbc->prepare($find);
-		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
-		$didExecute = $stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
+		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
-		if ($didExecute) {
-			$result = $stmt->fetch();
+		if (bindValuesAndExecuteQuery($stmt)) {
+			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
+			return $stmt->fetch();
 		}
-
-		return $result;
 	}
 
-	public static function all() {
-		self::dbConnect();
-		$select = "SELECT * FROM users"
-		$stmt = self::$dbc->query($select);
-		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
-		$users = $stmt->fetchAll();
+	protected static function saveUser($key) {
+		if(array_key_exists($key, $this->attributes)) {
+			$this->update();
+		} else {
+			$this->insert();
+		}
+	}
 
-		return $users;
+	public static function findByUsernameOrEmail($username) {
+		self::dbConnect();
+		$findBy = "SELECT * FROM users WHERE username = :username";
+		$stmt = self::$dbc->prepare($findBy);
+
+		if (bindValuesAndExecuteQuery($stmt)) {
+			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
+			return $stmt->fetch();
+		}
 	}
 
 	private function bindValuesAndExecuteQuery($stmt) {
 		foreach ($this->attributes as $attribute => $value) {
 			$stmt->bindValue(':$attribute', $value, PDO::PARAM_STR);
 		}
-
 		$stmt->execute();
 	}
 }
