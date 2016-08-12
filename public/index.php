@@ -25,6 +25,7 @@ extract(pageController());
     <?php require '../views/partials/navbar.php'; ?>
     <?php require '../views/partials/table.php'; ?>
     <?=generateBodyHTML($dbc)?>
+    <?php require '../views/partials/footer.php'; ?>
     <?php require '../views/partials/common_js.php'; ?>
 </body>
 </html>
