@@ -1,23 +1,10 @@
-<?php
+<?php require __DIR__ . "/../controllers/pc_index.php"; ?>
 
-session_start();
-
-function pageController() {
-	$pageTitle = "FANTASY COSTCO: WHERE ALL YOUR DREAMS COME TRUE";
-
-	return [
-		"pageTitle" => $pageTitle
-	];
-}
-
-extract(pageController());
-
-?>
 <!DOCTYPE html>
 <html>
 <head>
-    <?php require '../views/partials/header.php'; ?>
-    <audio id="theme">
+	<?php require __DIR__ . '/../views/partials/header.php'; ?>
+	<audio id="theme">
 		<source src="audio/Fantasy Costco Theme.mp3" type="audio/ogg">
 	</audio>
 </head>

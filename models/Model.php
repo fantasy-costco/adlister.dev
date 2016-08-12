@@ -10,7 +10,6 @@ class Model {
 	public $attributes = array();
 
 	public function __construct() {
-
 		self::dbConnect();
 	}
 
@@ -29,97 +28,46 @@ class Model {
 		}
 	}
 
-	public function save() {
-
-		//Ensure there are attributes before attempting to save
-		//Perform the proper action - if the `id` is set, this is an update, if not it is a insert
-		if ( ! empty( $this->attributes ) && isset( $this->attributes['id'] ) )
-		{
-
-			$this->update( $this->attributes['id'] );
-		}
-		else
-		{
-
-			$this->insert();
-		}
-	}
-
-	// deletes object from db
-	public function delete()
-	{
-
+	public function delete() {
 		$query = 'DELETE FROM ' . static::$table . ' WHERE id = :id';
-
 		$stmt = self::$dbc->prepare($query);
 		$stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);
 		$stmt->execute();
 	}
 
-	// creates new entry in db
-	protected function insert()
-	{
-
-		//After insert, add the id back to the attributes array so the object can properly reflect the id
-		//Iterate through all the attributes to build the prepared query
-		//Use prepared statements to ensure data security
+	protected function insert() {
 		$columns = '';
 		$value_placeholders = '';
 
-		foreach ($this->attributes as $column => $value)
-		{
-
-			if ( $columns == '' && $value_placeholders == '')
-			{
-
-<<<<<<< HEAD
+		foreach ($this->attributes as $column => $value) {
+			if ($columns == '' && $value_placeholders == '') {
 				$columns .= $column;
 				$value_placeholders .= ':' . $column;
-			}
-			else
-			{
-
+			} else {
 				$columns .= ', ' . $column;
 				$value_placeholders .= ', :' . $column;
 			}
 		}
 
 		$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$value_placeholders})";
-=======
-    /*
-     * Persist the object to the database
-     */
-    public function save()
-    {
-        //Ensure there are attributes before attempting to save
-        //Perform the proper action - if the `id` is set, this is an update, if not it is a insert
-        if ( ! empty( $this->attributes ) && isset( $this->attributes['user_id'] ) )
-        {
-
-            $this->update( $this->attributes['user_id'] );
-        }
-        else
-        {
->>>>>>> 0da0238d19755d30cb2bd96c0caa6541a1918fd9
-
-		$stmt = self::$dbc->prepare($query);
-
-		foreach ($this->attributes as $column => $value) {
-			$stmt->bindValue(':' . $column, $value, PDO::PARAM_STR);
-		}
-
-		$stmt->execute();
-
-		$this->attributes['id'] = self::$dbc->lastInsertId();
 	}
 
-	// updates existing entry in db
-	protected function update($id)
-	{
+    public function save() {
+        if (!empty($this->attributes) && isset($this->attributes['user_id'])) {
+            $this->update($this->attributes['user_id']);
+        } else {
+			$stmt = self::$dbc->prepare($query);
 
-		//Ensure that update is properly handled with the id key
-		//You will need to iterate through all the attributes to build the prepared query
-		//Use prepared statements to ensure data security
+			foreach ($this->attributes as $column => $value) {
+				$stmt->bindValue(':' . $column, $value, PDO::PARAM_STR);
+			}
+		}
+		$stmt->execute();
+		$this->attributes['user_id'] = self::$dbc->lastInsertId();
+	}
+
+	protected function update($id) {
+
 		$query = "UPDATE " . static::$table . " SET ";
 		$first_value = true;
 

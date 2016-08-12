@@ -16,9 +16,11 @@
 			<?php foreach ($properties as $column => $value) : ?>
 				<?php if (!($column == "short_description")) : ?>
 					<?php if (is_numeric($value)) : ?>
-						<td align="center"><?= $value; ?></td>
+						<td align="center"><?=$value;?></td>
+					<?php elseif ($column == "img_path") : ?>
+						<td><img class="productThumb" src="<?= $value;?>"></td> 
 					<?php else : ?>	
-						<td><?= $value; ?></td>
+						<td><?=$value;?></td>
 					<?php endif; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>

@@ -270,6 +270,34 @@ h1 {
 	margin-bottom: 30px;
 }
 
+h2 {
+	font-size: 1.35em;
+	font-weight: 500;
+	margin: 0;
+	color: #0073a6;
+}
+
+/*Text*/
+
+p {
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+
+.warning {
+	color: #e31936;
+}
+
+p.warning.small {
+	margin: -10px 0 0 0;
+	padding: 0;
+	font-size: .75em;
+}
+
+p.finePrint {
+	font-size: .75em;
+}
+
 /*Tables*/
 table {
 	width: 100%;
@@ -299,6 +327,11 @@ th, td {
 
 tbody tr:nth-of-type(odd) {
 	background-color: #f7f8f9;
+}
+
+/*Images*/
+img.productThumb {
+	width: 60px;
 }
 
 /*	blue color: #0073a6;*/
