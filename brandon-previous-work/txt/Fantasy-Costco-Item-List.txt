@@ -80,7 +80,7 @@ IMG:
 NAME:The Anti Gravity Sphere
 DESCRIPTION:A small fist-sized glass ball filled with a silvery smoke. When the sphere is destroyed, it disables the effect of gravity on everything in a 30ft radius.
 PRICE:500 GP
-IMG:
+IMG:w
 NAME:The Glutton’s Fork
 DESCRIPTION:Once a day this fork will allow the user to eat any non-magical item they can fit in their mouth and gain 2d6 points of health. Just tap the fork on the item and it will turn edible.
 PRICE:750 GP
