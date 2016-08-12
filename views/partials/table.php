@@ -69,3 +69,37 @@ function searchResults($dbc){
 	$body.='</table>';
 	return $body;
 }
+function populateSidebar($dbc){
+	$search=$dbc->prepare('SELECT category, count(category) as count  FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm GROUP BY category LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
+	$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+	$search->execute();
+	//What if they don't find anything
+	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+		$sidebar="<div>Categories:\n<ul>";
+	foreach($searchResults as $key=>$value){
+		$sidebar.='<li>' . $value['category'] . '('. $value['count'] .')</li>';
+	}
+	$sidebar.='</ul>';
+	$query='SELECT (
+SELECT count(*) FROM items 
+WHERE (item_price <= 100) AND (item_name LIKE :searchterm OR keywords LIKE :searchterm))as less_than_100, 
+(
+SELECT count(*) FROM items WHERE (item_price > 100 AND item_price <=500)
+AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)) as 100_500,
+(
+SELECT count(*) FROM items WHERE (item_price>500 AND item_price <=1000) AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)
+) as 500_1000,(
+SELECT count(*) FROM items WHERE item_price>1000 AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)
+)as 1000_';
+	$search=$dbc->prepare($query);
+	$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+	$search->execute();
+	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+	$sidebar.='By Price<ul>
+	<li>0-100 (' . $searchResults[0]['less_than_100'] .')</li>
+	<li>1000-500 (' . $searchResults[0]['100_500'] . ')</li>
+	<li>5000-1000 (' . $searchResults[0]['500_1000'] . ')</li>
+	<li>1000+ (' . $searchResults[0]['1000_'] . ')</li>
+	</ul></div>';
+	return $sidebar;
+}
