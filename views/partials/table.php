@@ -20,10 +20,13 @@ function pageCount($dbc,$limit){
 		return $count;
 }
 function generateBodyHTML($dbc){
+	$body='';
 	if(Input::has('search')){
-		$body=searchResults($dbc);
-	}else{
+		if(Input::get('search')!='viewAll'){
+			$body=searchResults($dbc);
+		}else{
 		$body=viewAll($dbc);
+		}
 	}
 	return $body;
 }
@@ -47,35 +50,43 @@ function viewAll($dbc){
 	return $body;
 }
 function searchResults($dbc){
-	$search=$dbc->prepare('SELECT * FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
+	$search=$dbc->prepare('SELECT * FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm ORDER BY item_name LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
 	$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
 	$search->execute();
-	//What if they don't find anything
+	$body='<div>';
 	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
-		$body='<table>
-	<th>Picture</th>
-	<th>Item Name</th>
-	<th>Price</th>
-	<th>Short Description</th>';
-	foreach($searchResults as $key=>$value){
-		$body.='<tr>
-			<td><img src="' . $value['img_path'] .'"></td>
-			<td>' . $value['item_name'] .'</td>
-			<td>' . $value['item_price'] . '</td>
-			<td>' . $value['short_description'] . '</td>
-			<td>' . $value['keywords'] . '</td>
-		</tr>';
+	if(count($searchResults)<1){
+		$body.='No search results found';
+	}else{
+		$body.='<table>
+		<th>Picture</th>
+		<th>Item Name</th>
+		<th>Price</th>
+		<th>Short Description</th>';
+		foreach($searchResults as $key=>$value){
+			$body.='<tr>
+				<td><img src="' . $value['img_path'] .'"></td>
+				<td>' . $value['item_name'] .'</td>
+				<td>' . $value['item_price'] . '</td>
+				<td>' . $value['short_description'] . '</td>
+				<td>' . $value['keywords'] . '</td>
+			</tr>';
+		}
+		$body.='</table>';
 	}
-	$body.='</table>';
-	return $body;
+	return $body . '</div>';
 }
 function populateSidebar($dbc){
-	$search=$dbc->prepare('SELECT category, count(category) as count  FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm GROUP BY category LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
-	$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
-	$search->execute();
+	if(Input::get('search')=='viewAll'){
+		$searchResults=$dbc->query('SELECT * FROM items WHERE item_name')->fetchAll(PDO::FETCH_ASSOC);
+	}else{
+		$search=$dbc->prepare('SELECT category, count(category) as count  FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm GROUP BY category LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
+		$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+		$search->execute();
+		$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+	}
 	//What if they don't find anything
-	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
-		$sidebar="<div>Categories:\n<ul>";
+		$sidebar="<div><a href='http://adlister.dev?search=viewAll'>View All</a>\nCategories:\n<ul>";
 	foreach($searchResults as $key=>$value){
 		$sidebar.='<li>' . $value['category'] . '('. $value['count'] .')</li>';
 	}
