@@ -40,13 +40,14 @@ function viewAll($dbc){
 			<td>' . $value['item_name'] .'</td>
 			<td>' . $value['item_price'] . '</td>
 			<td>' . $value['short_description'] . '</td>
+			<td>' . $value['keywords'] . '</td>
 		</tr>';
 	}
 	$body.='</table>';
 	return $body;
 }
 function searchResults($dbc){
-	$search=$dbc->prepare('SELECT * FROM items WHERE item_name LIKE :searchterm LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
+	$search=$dbc->prepare('SELECT * FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
 	$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
 	$search->execute();
 	//What if they don't find anything
@@ -62,6 +63,7 @@ function searchResults($dbc){
 			<td>' . $value['item_name'] .'</td>
 			<td>' . $value['item_price'] . '</td>
 			<td>' . $value['short_description'] . '</td>
+			<td>' . $value['keywords'] . '</td>
 		</tr>';
 	}
 	$body.='</table>';

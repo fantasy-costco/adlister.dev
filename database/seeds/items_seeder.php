@@ -14,13 +14,15 @@ function createInventory(){
 		$priceLength=stripos($value,"GP");
 		$price=trim(substr($value,$descriptionLength+6,$priceLength-($descriptionLength+6)));
 		$imgLength=stripos($value,"IMG:");
-		$img=trim(substr($value,$imgLength+4));
-		$array[]=['name'=>$name,'price'=>$price,'description'=>$description,'imgpath'=>$img];
+		$keywordPos=stripos($value,"KEYWORDS:");
+		$img=trim(substr($value,$imgLength+4,$keywordPos));
+		$keywords=trim(substr($value,$keywordPos+9));
+		$array[]=['name'=>$name,'price'=>$price,'description'=>$description,'imgpath'=>$img,'keywords'=>$keywords];
 	}
 	fclose($handle);
 	return $array;
 }
-$insert=$dbc->prepare("INSERT INTO items (item_name,item_price,img_path,item_description) VALUES (:name,:price,:imgpath,:description)");
+$insert=$dbc->prepare("INSERT INTO items (item_name,item_price,img_path,item_description,keywords) VALUES (:name,:price,:imgpath,:description,:keywords)");
 $itemInventory = createInventory();
 foreach($itemInventory as $key=>$value){
 		if(strlen($value['name'])>0){
@@ -29,6 +31,7 @@ foreach($itemInventory as $key=>$value){
 			$insert->bindValue(':price',(int)$value['price'],PDO::PARAM_INT);
 			$insert->bindValue(':imgpath','/img/' . $key . '.png',PDO::PARAM_STR);
 			$insert->bindValue(':description',$value['description'],PDO::PARAM_STR);
+			$insert->bindValue(':keywords',$value['keywords'],PDO::PARAM_STR);
 			$insert->execute();
 		}
 }

@@ -10,6 +10,7 @@ $query='CREATE TABLE IF NOT EXISTS items(
 		item_description TEXT,
 		img_path VARCHAR(100) NOT NULL,
 		short_description VARCHAR(200),
+		keywords VARCHAR(100),
 		PRIMARY KEY(item_id)
 );';
 $dbc->exec($query);
