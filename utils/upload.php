@@ -21,7 +21,7 @@ if(isset($_FILES['UploadFileField'])){
     //when uploading files. All uploaded images should be placed in
     //  /img directory.
 
-    move_uploaded_file($UploadTmp, "/img/$UploadName");
+    move_uploaded_file($UploadTmp, "$UploadName");
 
   }
 
