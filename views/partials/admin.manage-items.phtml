@@ -1,0 +1,28 @@
+<h1>Manage Items</h1>
+
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Price</th>
+			<th>Description</th>
+			<th>Image</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($items as $item => $properties) : ?>
+			<tr>
+			<?php foreach ($properties as $column => $value) : ?>
+				<?php if (!($column == "short_description")) : ?>
+					<?php if (is_numeric($value)) : ?>
+						<td align="center"><?= $value; ?></td>
+					<?php else : ?>	
+						<td><?= $value; ?></td>
+					<?php endif; ?>
+				<?php endif; ?>
+			<?php endforeach; ?>
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>

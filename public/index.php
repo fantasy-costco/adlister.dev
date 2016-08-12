@@ -1,19 +1,31 @@
 <?php
+
 session_start();
-require_once __DIR__ . '/../bootstrap.php';
+
+function pageController() {
+	$pageTitle = "FANTASY COSTCO: WHERE ALL YOUR DREAMS COME TRUE";
+
+	return [
+		"pageTitle" => $pageTitle
+	];
+}
+
+extract(pageController());
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OooLister</title>
-    <?php require '../views/partials/head.php'; ?>
+    <?php require '../views/partials/header.php'; ?>
+    <audio id="theme">
+		<source src="audio/Fantasy Costco Theme.mp3" type="audio/ogg">
+	</audio>
 </head>
 <body>
     <?php require '../views/partials/navbar.php'; ?>
-
-    <?php require $main_view; ?>
-
+    <?php require '../views/partials/table.php'; ?>
+    <?=generateBodyHTML($dbc)?>
+    <?php require '../views/partials/footer.php'; ?>
     <?php require '../views/partials/common_js.php'; ?>
 </body>
 </html>
