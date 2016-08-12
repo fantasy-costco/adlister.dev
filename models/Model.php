@@ -28,12 +28,7 @@ class Model {
 		}
 	}
 
-	public function delete() {
-		$query = 'DELETE FROM ' . static::$table . ' WHERE id = :id';
-		$stmt = self::$dbc->prepare($query);
-		$stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);
-		$stmt->execute();
-	}
+protected abstract function delete();
 
 	protected function insert() {
 		$columns = '';
@@ -50,61 +45,13 @@ class Model {
 		}
 
 		$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$value_placeholders})";
+    return $query;
 	}
 
-    public function save() {
-        if (!empty($this->attributes) && isset($this->attributes['user_id'])) {
-            $this->update($this->attributes['user_id']);
-        } else {
-			$stmt = self::$dbc->prepare($query);
+  protected abstract function save();
 
-			foreach ($this->attributes as $column => $value) {
-				$stmt->bindValue(':' . $column, $value, PDO::PARAM_STR);
-			}
-		}
-		$stmt->execute();
-		$this->attributes['user_id'] = self::$dbc->lastInsertId();
-	}
+  protected abstract function update();
 
-	protected function update($id) {
-
-		$query = "UPDATE " . static::$table . " SET ";
-		$first_value = true;
-
-		foreach ($this->attributes as $key => $value)
-		{
-
-			if ( $key == 'id')
-			{
-
-				continue;
-			}
-
-			if ( $first_value )
-			{
-
-				$first_value = false;
-				$query .= $key . ' = :' . $key;
-			}
-			else
-			{
-
-				$query .= ', ' . $key . ' = :' . $key;
-			}
-		}
-
-		$query .= ' WHERE id = :id';
-
-		$stmt = self::$dbc->prepare($query);
-
-		foreach ($this->attributes as $key => $value)
-		{
-
-			$stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
-		}
-
-		$stmt->execute();
-	}
 
 
 	/*
