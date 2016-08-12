@@ -56,7 +56,7 @@ class Item extends Model {
 			if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
 					$this->update($item_id);
 			} else {
-				$query = insert();
+				$query = self::insert();
 				$stmt = self::$dbc->prepare($query);
 
 				foreach ($this->attributes as $column => $value) {
@@ -132,4 +132,37 @@ class Item extends Model {
 		}
 	}
 
+	public static function find($item_id) {
+	        self::dbConnect();
+	        $find = "SELECT * FROM items WHERE item_id = :item_id";
+	        $stmt = self::$dbc->prepare($find);
+	        $stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
+
+	        if (bindValuesAndExecuteQuery($stmt)) {
+	            $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
+	            return $stmt->fetch();
+	        }
+	}
+
+	public function insert(){
+		protected function insert() {
+			$columns = '';
+			$value_placeholders = '';
+
+			foreach ($this->attributes as $column => $value) {
+				if ($columns == '' && $value_placeholders == '') {
+					$columns .= $column;
+					$value_placeholders .= ':' . $column;
+				} else {
+					$columns .= ', ' . $column;
+					$value_placeholders .= ', :' . $column;
+				}
+			}
+
+			$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$value_placeholders})";
+	    return $query;
+		}
+	}
+
+	protected static function findItemById()
 }
