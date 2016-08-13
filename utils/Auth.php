@@ -6,18 +6,17 @@ require __DIR__ . '/../models/User.php';
 class Auth {
 
 	public static function attempt($username, $password) {
-		$error = "Incorrect login. Please try again.";
-
 		if(($username == "" || $username == null) || ($password == "" || $password == null)) {
-			$_SESSION['ERROR_MESSAGE'] = $error;
-			$this->logError($error);
+			$_SESSION['ERROR_MESSAGE'] = "Test 1. Incorrect login. Please try again.";
+			$this->logError("Incorrect login.");
 			return false;
 		}
 
 		$user = User::findByUsernameOrEmail($username);
+
 		if ($user == null) {
-			$_SESSION['ERROR_MESSAGE'] = $error;
-			$this->logError($error);
+			$_SESSION['ERROR_MESSAGE'] = "Test 2. Incorrect login. Please try again.";
+			self::logError("Incorrect login.");
 			return false;
 		}
 
@@ -26,8 +25,8 @@ class Auth {
 			$_SESSION['LOGGED_IN_ID'] = $user->user_id;
 			return true;
 		} else {
-			$_SESSION['ERROR_MESSAGE'] = $error;
-			$this->logError($error);
+			$_SESSION['ERROR_MESSAGE'] = "Test 3. Incorrect login. Please try again.";
+			self::logError("Incorrect login.");
 			return false;
 		}
 	}
@@ -55,5 +54,3 @@ class Auth {
 		$log->error($error . PHP_EOL);
 	}
 }
-
-?>
