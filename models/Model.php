@@ -115,4 +115,4 @@ abstract class Model {
 			return $stmt->fetch();
 		}
 	}
-  }
+}
