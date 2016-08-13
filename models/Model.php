@@ -38,6 +38,6 @@ abstract class Model {
 	// public function delete() {};
 
 	protected abstract function insert();
-  	protected abstract function update();
+  	 public abstract function update();
 
   }

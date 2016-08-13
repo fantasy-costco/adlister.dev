@@ -17,12 +17,15 @@ Add Item
 <label for='description'>Description:
 	<input type='text' name='description id='description'>
 </label></div>
-<div class='formInput'>
-<label for='img_path'>Image
-<span class='warning'>(Must be .jpeg or .png)</span>
-	<input type='text' name='img_path' id='img_path'>
-</label>
+
+<div class='formInput fileuploadholder'>
+	<form enctype="multipart/form-data" action="tester.php" method="post" name="FileUploadForm" id="FileUploadForm">
+	<label for='img_path'>Upload Image File
+	<span class='warning'>(Must be .jpeg or .png)</span>
+		<input type='file' name='img_path' id='img_path'>
+	</label>
 </div>
+
 <div class='formInput'>
 <label for='short_description'>Short Description:
 	<input type='text' name='short_description' id='short_description'>
@@ -38,4 +41,6 @@ Add Item
 </div>
 </form>
 FORM;
+
+print_r($form);
 ?>

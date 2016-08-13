@@ -25,7 +25,7 @@ class Item extends Model {
 		  $UploadName = preg_replace("#[^a-z0-9.]#i", "", $UploadName);
 
 			if(!checkFileType($UploadName)){
-				die('Error - File must be .jpeg or .png')
+				die('Error - File must be .jpeg or .png');
 			}
 
 		  if(($FileSize > 50000)){
@@ -52,9 +52,9 @@ class Item extends Model {
 		return $UploadName;
 	}
 
-	public function save() {
+	public function saveItem() {
 			if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
-					$this->update($item_id);
+					self::update($item_id);
 			} else {
 				$query = self::insert();
 				$stmt = self::$dbc->prepare($query);
@@ -74,7 +74,7 @@ class Item extends Model {
 			$this->attributes['item_id'] = self::$dbc->lastInsertId();
 	 }
 
-	 protected function update($item_id) {
+	 public function updateItem($item_id) {
  		$query = "UPDATE " . static::$table . " SET ";
  		$first_value = true;
 
@@ -144,7 +144,7 @@ class Item extends Model {
 	        }
 	}
 
-	public function insert(){
+
 		protected function insert() {
 			$columns = '';
 			$value_placeholders = '';
@@ -162,7 +162,9 @@ class Item extends Model {
 			$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$value_placeholders})";
 	    return $query;
 		}
-	}
 
-	protected static function findItemById()
+		public function update(){
+
+		}
+	// protected static function findItemById();
 }
