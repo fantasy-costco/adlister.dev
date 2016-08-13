@@ -9,12 +9,11 @@
 	</audio>
 </head>
 <body>
-	<?php var_dump($_GET);?>
     <?php require '../views/partials/navbar.php'; ?>
     <?php require '../views/partials/table.php'; ?>
     <?=populateSidebar($dbc)?>
     <div class='container'>
-    <?=generateBodyHTML($dbc)?>
+    <?=generateTable($dbc)?>
     </div>
     <?php require '../views/partials/footer.php'; ?>
     <?php require '../views/partials/common_js.php'; ?>
