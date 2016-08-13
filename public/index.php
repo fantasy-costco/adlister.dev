@@ -9,6 +9,7 @@
 	</audio>
 </head>
 <body>
+	<?php var_dump($_GET);?>
     <?php require '../views/partials/navbar.php'; ?>
     <?php require '../views/partials/table.php'; ?>
     <?=populateSidebar($dbc)?>
