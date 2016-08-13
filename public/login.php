@@ -1,4 +1,4 @@
-<?php require __DIR__ . "/../controllers/pc_login.php"; ?>
+<?php require __DIR__ . "/../controllers/pc_login.php";?>
 
 <!DOCTYPE html>
 <html>
@@ -78,8 +78,6 @@
 						<input type="text" maxlength="32" name="username" value="" placeholder="john.doe">
 					</div>
 
-
-
 					<div class="formInput">
 						<label for="password">
 							Password<span class="warning">*</span>
@@ -95,7 +93,7 @@
 					</div>
 
 					<div class="formButton">
-						<button class="blueButton" type="submit" name="submit" value="register">Register</button><p class="warning"><?= $message ?></p>
+						<button class="blueButton" type="submit" name="submit" value="register">Register</button><p class="warning message"><?= $message ?></p>
 					</div>
 
 				</form>
