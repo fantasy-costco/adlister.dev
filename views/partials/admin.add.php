@@ -15,7 +15,7 @@ Add Item
 	</label></div>
 <div class='formInput'>
 <label for='description'>Description:
-	<input type='text' name='description id='description'>
+	<input type='text' name='description' id='description'>
 </label></div>
 
 <div class='formInput fileuploadholder'>
