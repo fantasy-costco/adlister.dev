@@ -13,15 +13,15 @@
 		<div class="flex">
 			<div class="col-6">
 				<h2>Registered Shoppers - Sign In</h2>
-				<p>Please provide your email address and password to access your account.</p>
+				<p>Please provide your username and password to access your account.</p>
 				<p class="warning small">* Required fields.</p>
 				<form name="login" action="" method="post">
 
 					<div class="formInput">
-						<label for="email">
-							Email Address<span class="warning">*</span>
+						<label for="username">
+							Username<span class="warning">*</span>
 						</label>
-						<input type="text" name="email" maxlength="254" value="" placeholder="john.doe@gmail.com">
+						<input type="text" name="username" maxlength="254" value="" placeholder="john.doe">
 					</div>
 
 					<div class="formInput">
@@ -93,7 +93,7 @@
 					</div>
 
 					<div class="formButton">
-						<button class="blueButton" type="submit" name="submit" value="register">Register</button><p class="warning message"><?= $message ?></p>
+						<button class="blueButton" type="submit" name="submit" value="register">Register</button><p class="warning message"><?= isset($_SESSION["ERROR_MESSAGE"]) ? $_SESSION["ERROR_MESSAGE"] : null ?></p>
 					</div>
 
 				</form>

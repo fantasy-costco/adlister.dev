@@ -1,5 +1,5 @@
 <?php
-$form=<<<FORM
+$form = <<<FORM
 Add Item
 <form>
 <div class='formInput'>
@@ -10,9 +10,9 @@ Add Item
 <div class='formInput'>
 </div>
 <div class='formInput'>
-<label for='price'>Price:
-	<input type='text' name='price' id='price'>
-</label></div>
+	<label for='price'>Price:
+		<input type='text' name='price' id='price'>
+	</label></div>
 <div class='formInput'>
 <label for='description'>Description:
 	<input type='text' name='description id='description'>

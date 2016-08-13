@@ -1,4 +1,6 @@
-<?php require __DIR__ . "/../controllers/pc_index.php"; ?>
+<?php 
+
+require __DIR__ . "/../controllers/pc_index.php"; ?>
 
 <!DOCTYPE html>
 <html>
@@ -13,6 +15,7 @@
     <?php require '../views/partials/table.php'; ?>
     <?=populateSidebar($dbc)?>
     <div class='container'>
+        <?= $user["username"]; ?>
     <?=generateBodyHTML($dbc)?>
     </div>
     <?php require '../views/partials/footer.php'; ?>
