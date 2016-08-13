@@ -10,7 +10,7 @@ abstract class Model {
 	protected $attributes = [];
 
 	public function __construct(array $attributes = array()) {
-		self::dbConnect();		
+		self::dbConnect();
 		$this->attributes = $attributes;
 	}
 
@@ -67,8 +67,8 @@ abstract class Model {
         $stmt = self::$dbc->prepare($query);
         foreach ($this->attributes as $column => $value) {
             $stmt->bindValue(':' . $column, $value, PDO::PARAM_STR);
-        var_dump($stmt);
         }
+				var_dump($stmt);
         // $stmt->execute();
         $this->attributes['id'] = self::$dbc->lastInsertId();
     }
