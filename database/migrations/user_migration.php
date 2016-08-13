@@ -6,7 +6,7 @@ require_once __DIR__ . '/../db_connect.php';
 $dbc->exec('DROP TABLE IF EXISTS users');
 
 $query = 'CREATE TABLE users (
-    user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(75) NOT NULL,
     current_balance DOUBLE PRECISION(6,2) NOT NULL,
@@ -14,7 +14,7 @@ $query = 'CREATE TABLE users (
     username VARCHAR(32) NOT NULL,
     password VARCHAR(64) NOT NULL,
     admin TINYINT(1) NOT NULL,
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (id)
 )';
 
 $dbc->exec($query);

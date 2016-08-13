@@ -11,7 +11,7 @@
 		<div id="small-search">
 			<form method="GET">
 			<div style="display:block;position:relative;width:100%;background-color:purple;height:30px;min-width:65px;min-width:70px;max-width:70px;padding:5px;border:1px solid black">Shop
-				<img id="list-icon" src="/img/interface.png" style="background-color:yellow">
+				<input type="image" id="list-icon" src="/img/interface.png" style="background-color:yellow">
 			</form>
 			</div>
 		</div>
@@ -19,7 +19,7 @@
 			<div id="search-bar-inner-div">
 			<form method="GET">
 				<input type="text" id="searchbar" name="search">
-				<img src="/img/loupe.svg" id="search-icon">
+				<input type="image" src="/img/loupe.svg" id="search-icon">
 			</form>
 			</div>
 		</div>
