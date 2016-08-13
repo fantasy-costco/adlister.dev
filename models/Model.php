@@ -10,7 +10,7 @@ abstract class Model {
 	protected $attributes = [];
 
 	public function __construct(array $attributes = array()) {
-		self::dbConnect();		
+		self::dbConnect();
 		$this->attributes = $attributes;
 	}
 
@@ -35,7 +35,22 @@ abstract class Model {
 		}
 	}
 
-	protected abstract function insert();
-	protected abstract function update();
+	public function delete() {
+        $query = 'DELETE FROM ' . static::$table . ' WHERE id = :id';
+        $stmt = self::$dbc->prepare($query);
+        $stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);
+        $stmt->execute();
+    }
 
+    public static function find($id) {
+		self::dbConnect();
+		$find = "SELECT * FROM users WHERE id = :id";
+		$stmt = self::$dbc->prepare($find);
+		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+		if ($this->bindValuesAndExecuteQuery($stmt)) {
+			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
+			return $stmt->fetch();
+		}
+	}
 }
