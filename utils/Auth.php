@@ -1,93 +1,58 @@
 <?php
 
-require_once 'Log.php';
-require_once '../models/User.php';
+require __DIR__ . '/Log.php';
+require __DIR__ . '/../models/User.php';
 
-class Auth
-{
+class Auth {
 
-	// runs login attempt with parameters
-	public static function attempt($username, $password)
-	{
+	public static function attempt($username, $password) {
+		$error = "Incorrect login. Please try again.";
 
-		// makes sure the values passed in are not empty
-		if(($username == '' || $username == null) || ($password == '' || $password == null))
-		{
-
-			$_SESSION['ERROR_MESSAGE'] = 'Login information was incorrect';
+		if(($username == "" || $username == null) || ($password == "" || $password == null)) {
+			$_SESSION['ERROR_MESSAGE'] = $error;
+			$this->logError($error);
 			return false;
 		}
 
-		// gets instance of user model by searching with username or email($username)
 		$user = User::findByUsernameOrEmail($username);
-
-		// makes sure the instance returned is not empty
-		if ($user == null)
-		{
-
-			$_SESSION['ERROR_MESSAGE'] = 'Login information was incorrect';
+		if ($user == null) {
+			$_SESSION['ERROR_MESSAGE'] = $error;
+			$this->logError($error);
 			return false;
 		}
 
-		// checks password submitted against hashed password
-		if (password_verify($password, $user->password))
-		{
-
-			// sets session variables used for logged in user
+		if (password_verify($password, $user->password)) {
 			$_SESSION['IS_LOGGED_IN'] = $user->username;
-			$_SESSION['LOGGED_IN_ID'] = $user->id;
-
+			$_SESSION['LOGGED_IN_ID'] = $user->user_id;
 			return true;
+		} else {
+			$_SESSION['ERROR_MESSAGE'] = $error;
+			$this->logError($error);
+			return false;
 		}
-
-		$_SESSION['ERROR_MESSAGE'] = 'Login information was incorrect';
-		return false;
 	}
 
-	// checks session to see if user is logged in
-	public static function check()
-	{
-
-		return (isset($_SESSION['IS_LOGGED_IN']) && $_SESSION['IS_LOGGED_IN'] != '');
+	public static function isLoggedIn() {
+		return (isset($_SESSION['IS_LOGGED_IN']) && $_SESSION['IS_LOGGED_IN'] != "");
 	}
 
-	// returns id of the currently logged in user
-	public static function id()
-	{
-
-		if (Auth::check())
-		{
-
-			return $_SESSION['LOGGED_IN_ID'];
-		}
-
-		return null;
+	public static function getCurrentUserId() {
+		return Auth::isLoggedIn() ? $_SESSION['LOGGED_IN_ID'] : null;
 	}
 
-	// returns instance of the user model for the user that is currently logged in
-	public static function user()
-	{
-
-		if (self::check())
-		{
-
-			return User::findByUsernameOrEmail($_SESSION['IS_LOGGED_IN']);
-		}
-
-		return null;
+	public static function getCurrentUserInstance() {
+		return Auth::isLoggedIn() ? User::findByUsernameOrEmail($_SESSION['IS_LOGGED_IN']) : null;
 	}
 
-	// clears session variables(logs out user)
-	public static function logout()
-	{
-
-		// clear $_SESSION array
+	public static function logout() {
 	    session_unset();
-
-	    // delete session data on the server and send the client a new cookie
 	    session_regenerate_id(true);
-
 	    return true;
+	}
+
+	public static function logError($error) {
+		$log = new Log();
+		$log->error($error . PHP_EOL);
 	}
 }
 

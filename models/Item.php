@@ -25,7 +25,7 @@ class Item extends Model {
 		  $UploadName = preg_replace("#[^a-z0-9.]#i", "", $UploadName);
 
 			if(!checkFileType($UploadName)){
-				die('Error - File must be .jpeg or .png')
+				die('Error - File must be .jpeg or .png');
 			}
 
 		  if(($FileSize > 50000)){
@@ -52,11 +52,11 @@ class Item extends Model {
 		return $UploadName;
 	}
 
-	public function save() {
+	public function saveItem() {
 			if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
-					$this->update($item_id);
+					self::update($item_id);
 			} else {
-				$query = insert();
+				$query = self::insert();
 				$stmt = self::$dbc->prepare($query);
 
 				foreach ($this->attributes as $column => $value) {
@@ -74,7 +74,7 @@ class Item extends Model {
 			$this->attributes['item_id'] = self::$dbc->lastInsertId();
 	 }
 
-	 protected function update($item_id) {
+	 public function updateItem($item_id) {
  		$query = "UPDATE " . static::$table . " SET ";
  		$first_value = true;
 
@@ -132,4 +132,39 @@ class Item extends Model {
 		}
 	}
 
+	public static function find($item_id) {
+	        self::dbConnect();
+	        $find = "SELECT * FROM items WHERE item_id = :item_id";
+	        $stmt = self::$dbc->prepare($find);
+	        $stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
+
+	        if (bindValuesAndExecuteQuery($stmt)) {
+	            $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
+	            return $stmt->fetch();
+	        }
+	}
+
+
+		protected function insert() {
+			$columns = '';
+			$value_placeholders = '';
+
+			foreach ($this->attributes as $column => $value) {
+				if ($columns == '' && $value_placeholders == '') {
+					$columns .= $column;
+					$value_placeholders .= ':' . $column;
+				} else {
+					$columns .= ', ' . $column;
+					$value_placeholders .= ', :' . $column;
+				}
+			}
+
+			$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$value_placeholders})";
+	    return $query;
+		}
+
+		public function update(){
+
+		}
+	// protected static function findItemById();
 }

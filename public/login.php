@@ -1,4 +1,4 @@
-<?php require __DIR__ . "/../controllers/pc_login.php"; ?>
+<?php require __DIR__ . "/../controllers/pc_login.php";?>
 
 <!DOCTYPE html>
 <html>
@@ -25,7 +25,7 @@
 					</div>
 
 					<div class="formInput">
-						<label for="logonPassword">
+						<label for="password">
 							Password<span class="warning">*</span>
 						</label>
 						<input type="text" name="password" maxlength="254" placeholder="********">
@@ -39,29 +39,50 @@
 
 					<!-- <input type="hidden" name="submitButton" value="signIn"> -->
 					<div class="formButton">
-						<button class="blueButton" type="submit" name="login">Log In</button>
+						<button class="blueButton" type="submit" name="submit" value="login">Log In</button>
 					</div>
 				</form>
 			</div>
 
 			<div class="col-6">
 				<h2>Register A New Account</h2>
-				<p>Enter your email address and create your new account!</p>
+				<p>Enter your information below to create your new account!</p>
 				
-				<form name="register" action="" method="post">
+				<form name="register" action="login.php" method="post">
 
 					<div class="formInput">
-						<label for="registerEmail">
-							Email Address<span class="warning">*</span>
+						<label for="first_name">
+							First Name<span class="warning">*</span>
 						</label>
-						<input type="text" maxlength="32" name="registerEmail" value="" placeholder="john.doe@gmail.com">
+						<input type="text" maxlength="50" name="first_name" value="" placeholder="John">
 					</div>
 
 					<div class="formInput">
-						<label for="registerPassword">
+						<label for="last_name">
+							Last Name<span class="warning">*</span>
+						</label>
+						<input type="text" maxlength="75" name="last_name" value="" placeholder="Doe">
+					</div>
+
+					<div class="formInput">
+						<label for="email">
+							Email Address<span class="warning">*</span>
+						</label>
+						<input type="text" maxlength="32" name="email" value="" placeholder="john.doe@gmail.com">
+					</div>
+
+					<div class="formInput">
+						<label for="username">
+							Username<span class="warning">*</span>
+						</label>
+						<input type="text" maxlength="32" name="username" value="" placeholder="john.doe">
+					</div>
+
+					<div class="formInput">
+						<label for="password">
 							Password<span class="warning">*</span>
 						</label>
-						<input type="password" maxlength="64" name="registerPassword" value="" placeholder="********">
+						<input type="password" maxlength="64" name="password" value="" placeholder="********">
 					</div>
 
 					<div class="formInput">
@@ -72,7 +93,7 @@
 					</div>
 
 					<div class="formButton">
-						<button class="blueButton" type="submit" name="register">Register</button>
+						<button class="blueButton" type="submit" name="submit" value="register">Register</button><p class="warning message"><?= $message ?></p>
 					</div>
 
 				</form>

@@ -15,6 +15,14 @@ header {
 	margin-bottom: 50px;
 }
 
+
+aside {
+    /* Give the sidebar a default width, and prevent it from shrinking */
+    flex-shrink:0;
+    width:100 px;
+}
+
+
 #links-bar {
 	display: block;
 	position: relative;
@@ -297,6 +305,11 @@ h2 {
 	color: #0073a6;
 }
 
+/* List items*/
+li{
+	list-style: none;
+}
+
 /*Text*/
 
 p {
@@ -312,6 +325,10 @@ p.warning.small {
 	margin: -10px 0 0 0;
 	padding: 0;
 	font-size: .75em;
+}
+
+p.warning.message {
+	display: inline;
 }
 
 p.finePrint {
