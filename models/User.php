@@ -21,7 +21,14 @@ class User extends Model {
 	protected function update() {
 		$update = "UPDATE users SET first_name = :first_name, last_name = :last_name, current_balance = :current_balance, email = :email, username = :username, password = :password, admin = :admin WHERE id = :id";
 		$stmt = self::$dbc->prepare($update);
-		$this->bindValuesAndExecuteQuery($stmt);
+		$stmt->bindValue(':first_name', $this->attributes['first_name'], PDO::PARAM_STR);
+		$stmt->bindValue(':last_name', $this->attributes['last_name'], PDO::PARAM_STR);
+		$stmt->bindValue(':current_balance', $this->attributes['current_balance'], PDO::PARAM_STR);
+		$stmt->bindValue(':email', $this->attributes['email'], PDO::PARAM_STR);
+		$stmt->bindValue(':username', $this->attributes['username'], PDO::PARAM_STR);
+		$stmt->bindValue(':password', $this->attributes['password'], PDO::PARAM_STR);
+		$stmt->bindValue(':admin', $this->attributes['admin'], PDO::PARAM_BOOL);
+		$stmt->execute();
 	}
 
 	protected function delete() {

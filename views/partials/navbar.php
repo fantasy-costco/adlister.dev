@@ -1,12 +1,12 @@
 <header>
 	<div id="links-bar">
 		<div id="logo-div-top">
-			<img id="logo-top" src="/img/Fantasy-Costco-by-Ryanphantom.png">
+			<a href="/"><img id="logo-top" src="/img/Fantasy-Costco-by-Ryanphantom.png"></a>
 		</div>
 	</div>
 	<div id="main-header-bar">
 		<div id="logo-div">
-			<img id="logo" src="/img/Fantasy-Costco-by-Ryanphantom.png">
+			<a href="/"><img id="logo" src="/img/Fantasy-Costco-by-Ryanphantom.png"></a>
 		</div>
 		<div id="small-search">
 			<form method="GET">
@@ -49,8 +49,9 @@
 	</div>
 	<div id="search-div">
 		<img id="list-icon" src="/img/interface.png">
-		<span><a class="option">Option</a></span>
-		<span><a class="option">Option</a></span>
-		<span><a class="option">Option</a></span>
+		<span><a class="option">Consumables</a></span>
+		<span><a class="option">Equipment</a></span>
+		<span><a class="option">Misc</a></span>
+		<span><a class="option">Weapons</a></span>
 	</div>
 </header>

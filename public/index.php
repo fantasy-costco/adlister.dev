@@ -11,7 +11,7 @@ require __DIR__ . "/../controllers/pc_index.php"; ?>
 	</audio>
 </head>
 <body>
-<?php var_dump($_GET);?>
+	<?php var_dump($_GET);?>
     <?php require '../views/partials/navbar.php'; ?>
     <?php require '../views/partials/table.php'; ?>
     <?=populateSidebar($dbc)?>
