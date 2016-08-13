@@ -23,6 +23,7 @@ function pageController() {
 		} catch (LengthException $e) {
 			$errors[] = $e->getMessage();
 		}
+		var_dump($firstName);
 
 		try {
 			$lastName = Input::getString('last_name');
@@ -85,15 +86,19 @@ function pageController() {
 		}
 
 		if ($password == $registerPasswordConfirm) {
-			if (!$errors) {
+			if (count($errors) == 0) {
 				$user = new User;
 				$user->first_name = $firstName;
+				var_dump($firstName);
+				var_dump($user->attributes);
+				var_dump($user->attributes['first_name']);
 				$user->last_name = $lastName;
 				$user->current_balance = 2000;
 				$user->email = $email;
 				$user->username = $username;
 				$user->password = $password;
 				$user->admin = (bool) 0;
+				var_dump($user->attributes);
 				$user->save();
 				$_SESSION["CART"] = [];
 				// header("Location: index.php");
