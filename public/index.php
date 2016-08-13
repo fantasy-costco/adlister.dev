@@ -1,4 +1,6 @@
-<?php require __DIR__ . "/../controllers/pc_index.php"; ?>
+<?php 
+
+require __DIR__ . "/../controllers/pc_index.php"; ?>
 
 <!DOCTYPE html>
 <html>
