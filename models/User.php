@@ -4,9 +4,9 @@ require_once __DIR__ . '/Model.php';
 
 class User extends Model {
 
-	protected function insert() {
-		$insert = "INSERT INTO users (first_name, last_name, current_balance, email, username, password, admin) VALUES (:first_name, :last_name, :current_balance, :email, :username, :password, :admin)";
-		$stmt = self::$dbc->prepare($insert);
+	// protected function insert() {
+	// 	$insert = "INSERT INTO users (first_name, last_name, current_balance, email, username, password, admin) VALUES (:first_name, :last_name, :current_balance, :email, :username, :password, :admin)";
+	// 	$stmt = self::$dbc->prepare($insert);
 		// $stmt->bindValue(':first_name', $this->attributes['first_name'], PDO::PARAM_STR);
 		// $stmt->bindValue(':last_name', $this->attributes['last_name'], PDO::PARAM_STR);
 		// $stmt->bindValue(':current_balance', $this->attributes['current_balance'], PDO::PARAM_STR);
@@ -14,45 +14,44 @@ class User extends Model {
 		// $stmt->bindValue(':username', $this->attributes['username'], PDO::PARAM_STR);
 		// $stmt->bindValue(':password', $this->attributes['password'], PDO::PARAM_STR);
 		// $stmt->bindValue(':admin', $this->attributes['admin'], PDO::PARAM_BOOL);
-		$this->bindValuesAndExecuteQuery($stmt);
-		$stmt->execute();
-		
-		// $this->bindValuesAndExecuteQuery($stmt);
-		$this->attributes['user_id'] = self::$dbc->lastInsertId();
-	}
+		// var_dump($this->bindValuesAndExecuteQuery($stmt));
+		// var_dump($this->attributes);
+		// $stmt->execute();
+		// $this->attributes['id'] = self::$dbc->lastInsertId();
+	// }
 
-	protected function update() {
-		$update = "UPDATE users SET first_name = :first_name, last_name = :last_name, current_balance = :current_balance, email = :email, username = :username, password = :password, admin = :admin WHERE user_id = :user_id";
-		$stmt = self::$dbc->prepare($update);
-		$this->bindValuesAndExecuteQuery($stmt);
-	}
+	// protected function update() {
+	// 	$update = "UPDATE users SET first_name = :first_name, last_name = :last_name, current_balance = :current_balance, email = :email, username = :username, password = :password, admin = :admin WHERE id = :id";
+	// 	$stmt = self::$dbc->prepare($update);
+	// 	$this->bindValuesAndExecuteQuery($stmt);
+	// }
 
-	protected function delete() {
-		$erase = "DELETE FROM users WHERE user_id = :user_id";
-		$stmt = self::$dbc->prepare($erase);
-		$stmt->bindValue(':user_id', $this->attributes['user_id'], PDO::PARAM_INT);
-		$stmt->execute();
-	}
+	// protected function delete() {
+	// 	$erase = "DELETE FROM users WHERE id = :id";
+	// 	$stmt = self::$dbc->prepare($erase);
+	// 	$stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);
+	// 	$stmt->execute();
+	// }
 
-	public static function find($user_id) {
-		self::dbConnect();
-		$find = "SELECT * FROM users WHERE user_id = :user_id";
-		$stmt = self::$dbc->prepare($find);
-		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+	// public static function find($id) {
+	// 	self::dbConnect();
+	// 	$find = "SELECT * FROM users WHERE id = :id";
+	// 	$stmt = self::$dbc->prepare($find);
+	// 	$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
-		if ($this->bindValuesAndExecuteQuery($stmt)) {
-			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
-			return $stmt->fetch();
-		}
-	}
+	// 	if ($this->bindValuesAndExecuteQuery($stmt)) {
+	// 		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
+	// 		return $stmt->fetch();
+	// 	}
+	// }
 
-	protected function saveUser() {
-		if(isset($this->attributes['user_id'])) {
-			$this->update();
-		} else {
-			$this->insert();
-		}
-	}
+	// protected function saveUser() {
+	// 	if(isset($this->attributes['id'])) {
+	// 		$this->update();
+	// 	} else {
+	// 		$this->insert();
+	// 	}
+	// }
 
 	public static function findByUsernameOrEmail($username) {
 		self::dbConnect();
@@ -65,14 +64,21 @@ class User extends Model {
 		}
 	}
 
-	private function bindValuesAndExecuteQuery($stmt) {
-		foreach ($this->attributes as $attribute => $value) {
-			if ($attribute == 'admin') {
-				$stmt->bindValue(':$attribute', $value, PDO::PARAM_BOOL);	
-			} else {
-				$stmt->bindValue(':$attribute', $value, PDO::PARAM_STR);
-			}
-		}
-		$stmt->execute();
-	}
+	// private function bindValuesAndExecuteQuery($stmt) {
+	// 	foreach ($this->attributes as $attribute => $value) {
+	// 		$param = "";
+	// 		if (is_int($value)) {
+	// 			$param = PDO::PARAM_INT;
+	// 		} elseif (is_bool($value)) {
+	// 			$param = PDO::PARAM_BOOL;
+	// 		} elseif (is_null($value)) {
+	// 			$param = PDO::PARAM_NULL;
+	// 		} else {
+	// 			$param = PDO::PARAM_STR;
+	// 		}
+	// 		$stmt->bindValue(":$attribute", $value, $param);
+	// 	}
+	// 	return $stmt;
+		// return $stmt->execute();
+	// }
 }

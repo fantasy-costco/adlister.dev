@@ -93,10 +93,10 @@ function pageController() {
 				$user->email = $email;
 				$user->username = $username;
 				$user->password = $password;
-				$user->admin = false;
+				$user->admin = (bool) 0;
 				$user->save();
 				$_SESSION["CART"] = [];
-				header("Location: index.php");
+				// header("Location: index.php");
 			}
 		} else {
 			$message = "Your passwords don't match.";
