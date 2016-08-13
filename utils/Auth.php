@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/Log.php';
-require_once __DIR__ . '/../models/User.php';
+require __DIR__ . '/Log.php';
+require __DIR__ . '/../models/User.php';
 
 class Auth {
 
@@ -50,7 +50,7 @@ class Auth {
 	    return true;
 	}
 
-	private static function logError($error) {
+	public static function logError($error) {
 		$log = new Log();
 		$log->error($error . PHP_EOL);
 	}

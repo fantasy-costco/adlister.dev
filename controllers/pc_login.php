@@ -84,21 +84,20 @@ function pageController() {
 			$errors[] = $e->getMessage();
 		}
 
-		var_dump($errors);
-
 		if ($password == $registerPasswordConfirm) {
-			if (count($errors) == 0) {
-				$user = new User();
-				var_dump($user);
+			if (!$errors) {
+				$user = new User;
 				$user->first_name = $firstName;
 				$user->last_name = $lastName;
+				$user->current_balance = 2000;
 				$user->email = $email;
 				$user->username = $username;
 				$user->password = $password;
+				$user->admin = false;
 				$user->save();
 				$_SESSION["CART"] = [];
+				header("Location: index.php");
 			}
-			header("Location: http://www.yahoo.com");
 		} else {
 			$message = "Your passwords don't match.";
 			Auth::logError($message);

@@ -7,10 +7,11 @@ abstract class Model {
 	protected static $dbc;
 	protected static $table;
 
-	public $attributes = array();
+	protected $attributes = [];
 
-	public function __construct($attributes = []) {
-		self::dbConnect();
+	public function __construct(array $attributes = array()) {
+		self::dbConnect();		
+		$this->attributes = $attributes;
 	}
 
 	public function __get($key) {
@@ -29,9 +30,8 @@ abstract class Model {
 	}
 
   	public function save() {
-  		if ($_REQUEST["name"] == "user") {
-  			$key = User::find($this->attributes["user_id"]);
-  			User::saveUser($key);
+  		if ($_REQUEST["submit"] == "register") {
+  			$this->saveUser();
   		}
   	}
 

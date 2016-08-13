@@ -7,16 +7,17 @@ class User extends Model {
 	protected function insert() {
 		$insert = "INSERT INTO users (first_name, last_name, current_balance, email, username, password, admin) VALUES (:first_name, :last_name, :current_balance, :email, :username, :password, :admin)";
 		$stmt = self::$dbc->prepare($insert);
-		foreach ($this->attributes as $attribute => $value) {
-			if ($attribute == "current_balance") {
-				$stmt->bindValue(':current_balance', 2000, PDO::PARAM_INT);
-			} elseif ($attribute == "admin") {
-				$stmt->bindValue(':admin', 0, PDO::PARAM_INT);
-			} else {
-				$stmt->bindValue(':$attribute', $value, PDO::PARAM_STR);
-			}
-			$stmt->execute();
-		}
+		// $stmt->bindValue(':first_name', $this->attributes['first_name'], PDO::PARAM_STR);
+		// $stmt->bindValue(':last_name', $this->attributes['last_name'], PDO::PARAM_STR);
+		// $stmt->bindValue(':current_balance', $this->attributes['current_balance'], PDO::PARAM_STR);
+		// $stmt->bindValue(':email', $this->attributes['email'], PDO::PARAM_STR);
+		// $stmt->bindValue(':username', $this->attributes['username'], PDO::PARAM_STR);
+		// $stmt->bindValue(':password', $this->attributes['password'], PDO::PARAM_STR);
+		// $stmt->bindValue(':admin', $this->attributes['admin'], PDO::PARAM_BOOL);
+		$this->bindValuesAndExecuteQuery($stmt);
+		$stmt->execute();
+		
+		// $this->bindValuesAndExecuteQuery($stmt);
 		$this->attributes['user_id'] = self::$dbc->lastInsertId();
 	}
 
@@ -39,14 +40,14 @@ class User extends Model {
 		$stmt = self::$dbc->prepare($find);
 		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
-		if (bindValuesAndExecuteQuery($stmt)) {
+		if ($this->bindValuesAndExecuteQuery($stmt)) {
 			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
 			return $stmt->fetch();
 		}
 	}
 
-	protected static function saveUser($key) {
-		if(array_key_exists($key, $this->attributes)) {
+	protected function saveUser() {
+		if(isset($this->attributes['user_id'])) {
 			$this->update();
 		} else {
 			$this->insert();
@@ -66,7 +67,11 @@ class User extends Model {
 
 	private function bindValuesAndExecuteQuery($stmt) {
 		foreach ($this->attributes as $attribute => $value) {
-			$stmt->bindValue(':$attribute', $value, PDO::PARAM_STR);
+			if ($attribute == 'admin') {
+				$stmt->bindValue(':$attribute', $value, PDO::PARAM_BOOL);	
+			} else {
+				$stmt->bindValue(':$attribute', $value, PDO::PARAM_STR);
+			}
 		}
 		$stmt->execute();
 	}
