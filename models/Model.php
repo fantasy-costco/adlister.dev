@@ -35,6 +35,7 @@ abstract class Model {
 		}
 	}
 
+
 	public function delete() {
         $query = 'DELETE FROM ' . static::$table . ' WHERE id = :id';
         $stmt = self::$dbc->prepare($query);

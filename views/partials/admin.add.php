@@ -1,13 +1,8 @@
 <?php
-<<<<<<< HEAD
-$form = <<<FORM
-Add Item
-<form>
-=======
+
 $form=<<<FORM
 <h1>Add Item</h1>
 <form class="" action="admin_add_item.php" method="post">
->>>>>>> e8d641444403c7585a749c074198a1d0e545faa8
 <div class='formInput'>
 	<label for='item_name'>Item Name
 	<input type='text' name='item_name' id='item_name'>
@@ -19,20 +14,10 @@ $form=<<<FORM
 	</label>
 </div>
 <div class='formInput'>
-<<<<<<< HEAD
-	<label for='price'>Price:
-		<input type='text' name='price' id='price'>
-	</label></div>
-<div class='formInput'>
-<label for='description'>Description:
-	<input type='text' name='description' id='description'>
-</label></div>
-=======
 	<label for='description'>Description:
 		<input type='text' name='description' id='description'>
 	</label>
 </div>
->>>>>>> e8d641444403c7585a749c074198a1d0e545faa8
 
 <div class='formInput fileuploadholder'>
 	<form enctype="multipart/form-data" action="tester.php" method="post" name="FileUploadForm" id="FileUploadForm">
