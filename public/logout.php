@@ -1,12 +1,12 @@
 <?php
 
-require_once "../../src/Log.php";
-require_once "../../src/Auth.php";
+require __DIR__ . "/../utils/Auth.php";
 
 function pageController() {
 	session_start();
-	Log::info("User $username logged out.");
+	Auth::logInfo("User {$_SESSION['IS_LOGGED_IN']} logged out.");
 	Auth::logout();
+	header("Location: login.php");
 }
 
 pageController();
