@@ -1,11 +1,11 @@
 <footer>
-	<div class="container">
+	<div class="footerContainer">
 		<div class="flex">
-			<div class="col-6">
+			<div class="col-9">
 				<p class="tinyPrint">Search, cart, account, and list icons designed by <a href="http://www.freepik.com" target="_blank">Freepik</a> and distributed by <a href="http://www.flaticon.com" target="_blank">Flaticon.</a></p>
 				<p class="tinyPrint">This site may contain copyrighted material the use of which has not always been specifically authorized by the copyright owner. This website is a parody, designed solely for entertainment purposes, and does not generate an profit. This constitutes a 'fair use' of any such copyrighted material as provided for in section 107 of the US Copyright Law. In accordance with Title 17 U.S.C. Section 107, the material on this site is distributed without profit. If you wish to use copyrighted material from this site for purposes of your own that go beyond 'fair use', you must obtain permission from the copyright owner.</p>
 			</div>
-			<div class="col-6">
+			<div class="col-3">
 				<p class="footerHead">Site Produced By:</p>
 				<div class="contributorLogoDiv">
 					<a href="http://foxglovestudios.net" target="_blank"><img class="contributorLogo" src="/img/foxgloveicon.png" alt="FOXGLOVE STUDIOS"></a>

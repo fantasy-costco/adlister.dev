@@ -67,9 +67,10 @@ class User extends Model {
 		$findBy = "SELECT * FROM users WHERE username = :username";
 		$stmt = self::$dbc->prepare($findBy);
 		$stmt->bindValue(':username', $username, PDO::PARAM_STR);
-		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
-		$stmt->execute();
-		return $stmt->fetch();
+		if ($stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User')) {
+			$stmt->execute();
+			return $stmt->fetch();
+		}
 	}
 
 	private function bindValuesAndExecuteQuery($stmt) {

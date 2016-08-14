@@ -18,7 +18,7 @@ require __DIR__ . "/../controllers/pc_index.php"; ?>
     <div class='container'>
     <?=generateBodyHTML($dbc)?>
     </div>
-    <?php require '../views/partials/footer.php'; ?>
+    <?php require __DIR__ . '/../views/partials/footer.php'; ?>
     <?php require '../views/partials/common_js.php'; ?>
 </body>
 </html>

@@ -8,25 +8,22 @@ class Auth {
 	public static function attempt($username, $password) {
 		if(($username == "" || $username == null) || ($password == "" || $password == null)) {
 			self::logError();
-			$_SESSION['ERROR_MESSAGE'] = "Not finding user.";
 			return false;
 		}
 
 		$user = User::findByUsernameOrEmail($username);
 
 		if ($user == null) {
-			$_SESSION['ERROR_MESSAGE'] = "Not finding user.";
 			self::logError();
 			return false;
 		}
 
-		if (password_verify($password, $user->password)) {
+		if (password_verify($password, $user->password) || $password === $user->password) {
 			$_SESSION['IS_LOGGED_IN'] = $user->username;
 			$_SESSION['LOGGED_IN_ID'] = $user->user_id;
 			$_SESSION['USER_TYPE'] = $user->admin;
 			return true;
 		} else {
-			$_SESSION['ERROR_MESSAGE'] = "Not finding user.";
 			self::logError();
 			return false;
 		}

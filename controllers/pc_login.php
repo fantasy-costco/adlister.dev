@@ -6,7 +6,6 @@ require __DIR__ . "/../utils/Auth.php";
 session_start();
 
 function pageController() {
-	var_dump($_SESSION);
 	$pageTitle = "SIGN IN";
 	$message = "";
 
@@ -26,7 +25,6 @@ function pageController() {
 		} catch (LengthException $e) {
 			$errors[] = $e->getMessage();
 		}
-		var_dump($firstName);
 
 		try {
 			$lastName = Input::getString('last_name');
@@ -136,7 +134,7 @@ function pageController() {
 		// run creds through Auth for verification
 		if (Auth::attempt($username, $password)) {
 			unset($_SESSION['ERROR_MESSAGE']);
-			if ($_SESSION['USER_TYPE'] === 1) {
+			if ($_SESSION['USER_TYPE']) {
 				header("Location: admin_account.php");
 			} else {
 				header("Location: index.php");
