@@ -9,7 +9,7 @@
 	<div class="container">
 		<div class="flex">
 			<div class="col-6">
-				<img src="http://placekitten.com/525/525" alt="short description">
+				<img class="img-responsive" src="http://placekitten.com/525/525" alt="short description">
 			</div>
 			<div class="col-4">
 				<h2 class="productName">Item Name</h2>

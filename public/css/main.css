@@ -405,19 +405,8 @@ input {
 	width: 100%;
 }
 
-button.blueButton {
-	background-color: #0073a6;
-}	
 
-button.blueButton {
-	background-color: #0073a6;
-}	
-
-input.redButton {
-	background-color: #e31936;
-}
-
-button.blueButton, input.redButton {
+button.blueButton, button.greenButton, input.redButton {
 	color: #fff;
 	font-size: .85em;
 	text-align: center;
@@ -427,6 +416,18 @@ button.blueButton, input.redButton {
 	height: 30px;
 	box-shadow: none;
 	border-style: none;
+}
+
+button.greenButton {
+	background-color: #00a61f;
+}	
+
+button.blueButton {
+	background-color: #0073a6;
+}	
+
+input.redButton {
+	background-color: #e31936;
 }
 
 button.blueButton:hover, button.blueButton:active, button.blueButton:focus {
@@ -443,6 +444,12 @@ img.productThumb {
 img.contributorLogo {
 	height: 50px;
 	margin-right: 10px;
+}
+
+img.img-responsive {
+	display: block;
+    max-width: 100%;
+    height: auto;
 }
 
 /*Links*/
@@ -473,5 +480,5 @@ footer {
 	width: 70%;
 }
 
-/*	blue color: #0073a6;*/
+/*blue color: #0073a6;*/
 /*red color: #e31936*/
