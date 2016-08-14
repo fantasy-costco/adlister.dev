@@ -111,9 +111,15 @@ class Item extends Model {
  	}
 
 	public function delete() {
-		$query = 'DELETE FROM ' . static::$table . ' WHERE item_id = :item_id';
+		self::dbConnect();
+		$query = "DELETE FROM " . "items" . " WHERE item_id = :item_id";
 		$stmt = self::$dbc->prepare($query);
-		$stmt->bindValue(':item_id', $this->attributes['item_id'], PDO::PARAM_INT);
+		$id = (int) $this->attributes['item_id'];
+		var_dump($id);
+		var_dump($dbc);
+		$stmt->bindValue(":item_id", $id, PDO::PARAM_STR);
+		var_dump($stmt);
+
 		$stmt->execute();
 	}
 
