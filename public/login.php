@@ -8,7 +8,9 @@
 <body>
 	<?php require __DIR__ . '/../views/partials/navbar.php'; ?>
 	<div class="container">
+		<a href="logout.php">LOG OUT</a>
 		<h1>Sign In or Create Account</h1>
+		<p class="errorMessage"><?= isset($_SESSION["ERROR_MESSAGE"]) ? $_SESSION["ERROR_MESSAGE"] : null ?></p>
 			
 		<div class="flex">
 			<div class="col-6">
@@ -93,7 +95,7 @@
 					</div>
 
 					<div class="formButton">
-						<button class="blueButton" type="submit" name="submit" value="register">Register</button><p class="warning message"><?= isset($_SESSION["ERROR_MESSAGE"]) ? $_SESSION["ERROR_MESSAGE"] : null ?></p>
+						<button class="blueButton" type="submit" name="submit" value="register">Register</button>
 					</div>
 
 				</form>

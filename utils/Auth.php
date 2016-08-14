@@ -7,26 +7,27 @@ class Auth {
 
 	public static function attempt($username, $password) {
 		if(($username == "" || $username == null) || ($password == "" || $password == null)) {
-			$_SESSION['ERROR_MESSAGE'] = "Test 1. Incorrect login. Please try again.";
-			$this->logError("Incorrect login.");
+			self::logError();
+			$_SESSION['ERROR_MESSAGE'] = "Not finding user.";
 			return false;
 		}
 
 		$user = User::findByUsernameOrEmail($username);
 
 		if ($user == null) {
-			$_SESSION['ERROR_MESSAGE'] = "Test 2. Incorrect login. Please try again.";
-			self::logError("Incorrect login.");
+			$_SESSION['ERROR_MESSAGE'] = "Not finding user.";
+			self::logError();
 			return false;
 		}
 
 		if (password_verify($password, $user->password)) {
 			$_SESSION['IS_LOGGED_IN'] = $user->username;
 			$_SESSION['LOGGED_IN_ID'] = $user->user_id;
+			$_SESSION['USER_TYPE'] = $user->admin;
 			return true;
 		} else {
-			$_SESSION['ERROR_MESSAGE'] = "Test 3. Incorrect login. Please try again.";
-			self::logError("Incorrect login.");
+			$_SESSION['ERROR_MESSAGE'] = "Not finding user.";
+			self::logError();
 			return false;
 		}
 	}
@@ -49,8 +50,14 @@ class Auth {
 	    return true;
 	}
 
-	public static function logError($error) {
+	public static function logError() {
+		$_SESSION['ERROR_MESSAGE'] = "Incorrect login. Please try again.";
 		$log = new Log();
-		$log->error($error . PHP_EOL);
+		$log->error("Incorrect login. Please try again." . PHP_EOL);
+	}
+
+	public static function logInfo($message) {
+		$log = new Log();
+		$log->info($message);
 	}
 }

@@ -6,6 +6,7 @@ require __DIR__ . "/../utils/Auth.php";
 session_start();
 
 function pageController() {
+	var_dump($_SESSION);
 	$pageTitle = "SIGN IN";
 	$message = "";
 
@@ -92,24 +93,18 @@ function pageController() {
 			if (count($errors) == 0) {
 				$user = new User;
 				$user->first_name = $firstName;
-				var_dump($firstName);
-				var_dump($user->attributes);
-				var_dump($user->attributes['first_name']);
 				$user->last_name = $lastName;
 				$user->current_balance = 2000;
 				$user->email = $email;
 				$user->username = $username;
 				$user->password = password_hash($password, PASSWORD_DEFAULT);
 				$user->admin = (bool) 0;
-				var_dump($user->attributes);
 				$user->save();
 				$_SESSION["CART"] = [];
 				header("Location: index.php");
-				var_dump($_SESSION);
 			}
 		} else {
-			$message = "Your passwords don't match.";
-			Auth::logError($message);
+			incorrectLogin();
 		}
 
 	// login form
@@ -139,15 +134,20 @@ function pageController() {
 		}
 
 		// run creds through Auth for verification
-		if(Auth::attempt($username, $password)) {
-			header("Location: index.php");
-		} else {
-			Auth::logError("Incorrect Login. Please try again.");
+		if (Auth::attempt($username, $password)) {
+			unset($_SESSION['ERROR_MESSAGE']);
+			if ($_SESSION['USER_TYPE'] === 1) {
+				header("Location: admin_account.php");
+			} else {
+				header("Location: index.php");
+			}
+		} elseif (!Auth::attempt($username, $password)) {
+			Auth::logError();
 		}
 	}
 			
 	return [
-		"pageTitle" => $pageTitle,
+		"pageTitle" => $pageTitle
 	];
 }
 

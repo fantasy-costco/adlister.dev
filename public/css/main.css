@@ -327,8 +327,9 @@ p.warning.small {
 	font-size: .75em;
 }
 
-p.warning.message {
-	display: inline;
+p.errorMessage {
+	color: #e31936;
+	text-align: center;
 }
 
 p.finePrint {
