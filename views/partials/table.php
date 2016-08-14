@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../../database/seeds/items_seeder.php';
 require_once __DIR__ . '/../../utils/Input.php';
-if(!Input::has('item')){
+if(!Input::has('item') && count($_GET)>0){
+	echo '<div style="width:100px">';
 	echo populateSidebar($dbc);
+	echo '</div>';
 	echo "<div class='container'>" . generateTable($dbc) ."</div>";
 	echo generatePageLinks(runQuery($dbc,false));
 }
@@ -63,7 +65,7 @@ function generateTable($dbc){
 	<th>Short Description</th>';
 	foreach($allItems as $key=>$value){
 		$body.='<tr>
-			<td><a href="/?item=' . $value['item_id'] . '"><img src="' . $value['img_path'] .'"></a></td>
+			<td><a href="/?item=' . $value['item_id'] . '"><img class="productThumb" src="' . $value['img_path'] .'"></a></td>
 			<td><a href="/?item=' . $value['item_id'] . '">' . $value['item_name'] .'</a></td>
 			<td>' . $value['item_price'] . '</td>
 			<td>' . $value['short_description'] . '</td>
@@ -73,6 +75,7 @@ function generateTable($dbc){
 	$body.='</table>';
 	return $body;
 }
+//Fix for when only has category
 function populateSidebar($dbc){
 	$sidebar='';
 	if(Input::has('search')){
@@ -84,7 +87,7 @@ function populateSidebar($dbc){
 			$search->execute();
 			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
 		}
-			$sidebar="<div><a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
+			$sidebar="<a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
 		foreach($searchResults as $key=>$value){
 			$sidebar.='<li><a href=/?search=' . Input::get('search') . '&category=' . $value['category'] .'>' .$value['category'] . '('. $value['count'] .')</a></li>';
 		}
@@ -121,7 +124,7 @@ function populateSidebar($dbc){
 		<li><a href="' . generateURl() .'&min=100&max=500">100-500GP (' . $searchResults[0]['100_500'] . ')</a></li>
 		<li><a href="' . generateURl() . '&min=500&max=1000">500-1000GP (' . $searchResults[0]['500_1000'] . ')</li></a>
 		<li><a href="' . generateURl() . '&min=1000">1000GP+ (' . $searchResults[0]['1000_'] . ')</li></a>
-		</ul></div>';
+		</ul>';
 	}
 	return $sidebar;
 }

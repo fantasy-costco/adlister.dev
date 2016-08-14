@@ -20,11 +20,9 @@ $form=<<<FORM
 </div>
 
 <div class='formInput fileuploadholder'>
-	<form enctype="multipart/form-data" action="tester.php" method="post" name="FileUploadForm" id="FileUploadForm">
-	<label for='img_path'>Upload Image File
-	<span class='warning'>(Must be .jpeg or .png)</span>
-		<input type='file' name='img_path' id='img_path'>
-	</label>
+				<label for="img_path">Upload Image File</label>
+			<span class="warning">(Must be .jpeg or .png)</span>
+			<input type="file" name="img_path" id="img_path">
 </div>
 
 <div class='formInput'>
@@ -45,7 +43,7 @@ $form=<<<FORM
 </div>
 
 <div class='formButton'>
-	<button type='submit'>Submit</button>
+	<button type='submit' name="submit" value="add_new_item">Submit</button>
 </div>
 </form>
 FORM;

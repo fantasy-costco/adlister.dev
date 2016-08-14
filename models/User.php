@@ -31,11 +31,15 @@ class User extends Model {
 		$stmt->execute();
 	}
 
-	protected function delete() {
+	public function deleteUser() {
 		$erase = "DELETE FROM users WHERE id = :id";
 		$stmt = self::$dbc->prepare($erase);
 		$stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);
 		$stmt->execute();
+	}
+
+	protected function delete(){
+
 	}
 
 	public static function find($id) {
