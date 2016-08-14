@@ -7,7 +7,7 @@ abstract class Model {
 	protected static $dbc;
 	protected static $table;
 
-	protected $attributes = [];
+	public $attributes = [];
 
 	public function __construct(array $attributes = array()) {
 		self::dbConnect();
@@ -32,9 +32,13 @@ abstract class Model {
 	public function save() {
 		if ($_REQUEST["submit"] == "register") {
 			$this->saveUser();
-	}
-	
-	public function delete() {
+		} elseif ($_REQUEST["submit"] == "add_new_item"){
+			$this->saveItem();
+		}
+
+}
+
+	protected function delete() {
         $query = 'DELETE FROM ' . static::$table . ' WHERE id = :id';
         $stmt = self::$dbc->prepare($query);
         $stmt->bindValue(':id', $this->attributes['id'], PDO::PARAM_INT);

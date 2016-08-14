@@ -14,17 +14,16 @@ class Item extends Model {
 		return $items;
 	}
 
-	public static function saveUploadedImage($input_name) {
-		if(isset($_FILES[$input_name])){
-
-		  $UploadName = $_FILES[$input_name]['name'];
-		  $UploadTmp = $_FILES[$input_name]['tmp_name'];
-		  $UploadType = $_FILES[$input_name]['type'];
-		  $FileSize = $_FILES[$input_name]['size'];
+	public function saveUploadedImage() {
+		if(isset($_FILES['img_path'])){
+		  $UploadName = $_FILES['img_path']['name'];
+		  $UploadTmp = $_FILES['img_path']['tmp_name'];
+		  $UploadType = $_FILES['img_path']['type'];
+		  $FileSize = $_FILES['img_path']['size'];
 
 		  $UploadName = preg_replace("#[^a-z0-9.]#i", "", $UploadName);
 
-			if(!checkFileType($UploadName)){
+			if(!$this->checkFileType($UploadName)){
 				die('Error - File must be .jpeg or .png');
 			}
 
@@ -39,39 +38,42 @@ class Item extends Model {
 		    //Must first figure out where the directory path should be for
 		    //when uploading files. All uploaded images should be placed in
 		    //  /img directory.
-				$image_url = self::convert($UploadName);
-		    move_uploaded_file($UploadTmp, "$image_url");
+				$image_url = $this->convert($UploadName);
+		    move_uploaded_file($UploadTmp, __DIR__ . '/../public/' . $image_url);
 				return $image_url;
 		  }
 
 		}
 	}
 
-	public static function convert($UploadName) {
-		$Uploadname = "/img" . "/{$UploadName}";
+	protected function convert($UploadName) {
+		$UploadName = "/img/" . $UploadName;
 		return $UploadName;
+	}
+
+	protected function insert() {
+		$new_img_url = $this->convert($this->attributes['img_path']);
+
+		$insert = "INSERT INTO items (item_name, item_price, item_description, img_path, short_description, keywords, category) VALUES (:item_name, :item_price, :item_description, :img_path, :short_description, :keywords, :category)";
+		$stmt = self::$dbc->prepare($insert);
+		$stmt->bindValue(':item_name', $this->attributes['item_name'], PDO::PARAM_STR);
+		$stmt->bindValue(':item_price', $this->attributes['item_price'], PDO::PARAM_INT);
+		$stmt->bindValue(':item_description', $this->attributes['item_description'], PDO::PARAM_STR);
+		$stmt->bindValue(':img_path', $new_img_url, PDO::PARAM_STR);
+		$stmt->bindValue(':short_description', $this->attributes['short_description'], PDO::PARAM_INT);
+		$stmt->bindValue(':keywords', $this->attributes['keywords'], PDO::PARAM_STR);
+		$stmt->bindValue(':category', $this->attributes['category'], PDO::PARAM_STR);
+		$stmt->execute();
+		$this->attributes['id'] = self::$dbc->lastInsertId();
 	}
 
 	public function saveItem() {
 			if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
-					self::update($item_id);
+					self::updateItem($item_id);
 			} else {
-				$query = self::insert();
-				$stmt = self::$dbc->prepare($query);
-
-				foreach ($this->attributes as $column => $value) {
-					if($column == 'item_price') {
-						$stmt->bindValue(':' . $column, $value, PDO::PARAM_INT);
-					}
-					if($column == 'image_path') {
-						$value = saveUploadedImage($value);
-						$stmt->bindValue(':' . $column, $value, PDO::PARAM_STR);
-					}
-					$stmt->bindValue(':' . $column, $value, PDO::PARAM_STR);
-				}
+				$this->insert();
+				$this->saveUploadedImage($this->attributes['img_path']);
 			}
-			$stmt->execute();
-			$this->attributes['item_id'] = self::$dbc->lastInsertId();
 	 }
 
 	 public function updateItem($item_id) {
@@ -99,7 +101,7 @@ class Item extends Model {
 				$stmt->bindValue(':' . $key, $value, PDO::PARAM_INT);
 			}
 			if($key == 'image_path') {
-				$value = saveUploadedImage($value);
+				$value = $this->saveUploadedImage($value);
 				$stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
 			}
 			$stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
@@ -115,13 +117,16 @@ class Item extends Model {
 		$stmt->execute();
 	}
 
-	public static function checkFileType($Uploadname) {
+	public function checkFileType($Uploadname) {
 		$file_parts = pathinfo($Uploadname);
 
 		switch($file_parts['extension']) {
 		    case "jpeg":
 					return true;
 			    break;
+
+				case "jpg":
+					return true;
 
 		    case "png":
 					return true;
@@ -144,24 +149,6 @@ class Item extends Model {
 	        }
 	}
 
-
-		protected function insert() {
-			$columns = '';
-			$value_placeholders = '';
-
-			foreach ($this->attributes as $column => $value) {
-				if ($columns == '' && $value_placeholders == '') {
-					$columns .= $column;
-					$value_placeholders .= ':' . $column;
-				} else {
-					$columns .= ', ' . $column;
-					$value_placeholders .= ', :' . $column;
-				}
-			}
-
-			$query = "INSERT INTO " . static::$table . " ({$columns}) VALUES ({$value_placeholders})";
-	    return $query;
-		}
 
 		public function update(){
 
