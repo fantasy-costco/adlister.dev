@@ -3,11 +3,21 @@
 session_start();
 
 require_once __DIR__ . '/../Models/Item.php';
+require __DIR__ . "/../utils/Input.php";
+
 
 function pageController() {
 	$pageTitle = "FANTASY COSTCO: WHERE ALL YOUR DREAMS COME TRUE";
 	$items = Item::all();
-	// var_dump($items);
+
+	if (Input::isPost() && $_REQUEST["submit"] == "delete") {
+		$item = new Item;
+		$item->item_id = $_REQUEST['id'];
+		$item->delete();
+	} elseif (Input::isPost() && $_REQUEST["submit"] == "edit"){
+		var_dump($_REQUEST['id']);
+		var_dump(false);
+	}
 
 	return [
 		"pageTitle" => $pageTitle,
