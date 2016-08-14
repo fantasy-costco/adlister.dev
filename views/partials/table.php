@@ -1,12 +1,20 @@
 <?php
 require_once __DIR__ . '/../../database/seeds/items_seeder.php';
 require_once __DIR__ . '/../../utils/Input.php';
+
 if(!Input::has('item') && count($_GET)>0){
-	echo '<div style="width:100px">';
-	echo populateSidebar($dbc);
-	echo '</div>';
-	echo "<div class='container'>" . generateTable($dbc) ."</div>";
-	echo generatePageLinks(runQuery($dbc,false));
+$output=<<<'DOC'
+    <div style="position:relative;display:flex;width:100%;height:auto">
+    	<div class="col-1"style="position:relative;height:400px;min-width:150px;max-width:150px;">
+DOC;
+$output.=populateSidebar($dbc) . '
+    	</div>
+    	<div class="col-11" style="display:inline;position:relative;height:auto;">' .
+    	generateTable($dbc) .
+    	generatePageLinks(runQuery($dbc,false)) .'
+    	</div>
+    </div>';
+echo $output;
 }
 function getOffset($dbc,$limit){
 	$offset=intval(Input::get('page'));

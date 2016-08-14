@@ -426,6 +426,7 @@ a:hover, a:active, a:visited {
 /*Footer*/
 
 footer {
+	display:block;
 	background-color: #efefef;
 	margin: 20px auto 0 auto;
 	padding-top: 10px;
