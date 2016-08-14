@@ -19,8 +19,8 @@ $items=[1 => ['name' =>'Stones of Far Speech','price' => 50,'description' => 'Pl
   10 => ['name' => "Lens of Straight Creepin’",'price' => 100,'description' =>'Glasses that make it look like your eyes are closed. Allows you to find footprints, tracks, or markings of anything that traveled through the air once per day.','img_path' =>'/img/10.png',
       'keywords' =>',magic, equipment, head slot','category'=>'Equipment'],
   11 =>['name' =>'Ring of Recall','price' => 700,'description' =>'Gold ring with a purple stone. Allows you to regain a spell slot for a failed spell casting',
-      'img_path' => '/img/11.png','keywords' =>'equipment,magic,wizard,hand slot','category'=>'Equipment'],
-  12 => ['name' =>'Bag of Mystery','price' => 300, 
+      'img_path' => '/img/11.png','keywords' =>'equipment,magic,non-combat,wizard,hand slot','category'=>'Equipment'],
+  12 => ['name' =>'Bag of Mystery','price' => 300,
       'description' => 'Small, patchwork leather bag about the size of a fantasy softball. There appears to be some kind of spherical object inside. What’s in the bag?','img_path' =>'/img/12.png','keywords' => 'magic,???','category'=>'Misc'],
   13 => ['name' => 'Pocket Spa','price' => 900,'description' =>'A bag that when opened magically becomes a small spa. Regain extra hit points whenever you take a short rest.','img_path' => '/img/13.png','keywords' => ',magic','category'=>'Misc'],
   14 => ['name' => 'Rusted Can of Cheerwine','price' => 400,
@@ -32,7 +32,6 @@ $items=[1 => ['name' =>'Stones of Far Speech','price' => 50,'description' => 'Pl
   18 => ['name' => 'Healing Potion','price' => 50,'description' => 'Heals the imbiber for 2d4+2 HP','img_path' => '/img/18.png','keywords' => 'non-magic,food,consumable,healing','category'=>'Consumable'],
   19 => ['name' => 'Haunted Doll','price' => 100,'description' => 'A creepy doll with the soul of a cat lady inside.This doll is very creepy. If its owner ever fails a third death save, the doll will take the hit instead, and will die in place of its owner.','img_path' => '/img/19.png','keywords' => 'magic,combat','category'=>'Misc'],
   20 => ['name' => 'SHIELD OF HEROIC MEMORIES','price' => 1200,'description' => "This perfectly round silver shield initially has a mirror finish. As a hero takes it into battle it remembers the enemies encountered, gaining a +1 to AC on any subsequent battle with creatures of that type. The events of the battle are intricately engraved onto the shield’s surface (which has a seemingly endless capacity for detail).\nThe bearer of the shield may also attempt to recount past battles (real or imagined) to the shield. Upon a DC 10 charisma check or DC 15 bluff check, the shield confers a +1 AC against the creatures described in the tall tales.\n3 failed attempts at recounting stories cause the shield to be cleared of all of its memories. The engravings disappear. It reverts to its mirror finish. All bonuses are lost.",'img_path' => '/img/20.png','keywords' =>'combat,shield,hand slot,fighter,paladin','category'=>'Equipment'],
-  21 => ['name' => 'The Anti Gravity Sphere','price' => 500,'description' => 'A small fist-sized glass ball filled with a silvery smoke. When the sphere is destroyed, it disables the effect of gravity on everything in a 30ft radius.','img_path' => '/img/21.png','keywords' => 'magic,consumable','category'=>'Consumable'], 
   22 => ['name' =>'The Glutton’s Fork','price' => 750, 'description' => 'Once a day this fork will allow the user to eat any non-magical item they can fit in their mouth and gain 2d6 points of health. Just tap the fork on the item and it will turn edible.','img_path' => '/img/22.png','keywords' =>'magic,healing','category'=>'Misc'],
   23 => ['name' => 'The Champion’s Belt','price' => 800,'description' => 'This ornate belt is given to someone who has bested all opponents in a test of strength.  Once per day the wearer may substitute their Strength score for their Wisdom or Charisma when making a stat check.','img_path' => '/img/23.png','keywords' => 'magic,waist item','category'=>'Equipment'],
   24 => ['name' => 'Phone a friend scrying bones','price' => 500,'description' => 'Once per day, can be used to ask a yes, no, or maybe question to the fates (DM). There are three bones carved into people with happy faces and sad faces. All happy faces means yes, all sad faces mean no, anything in between means maybe. The DM can respond or choose not to answer.','img_path' => '/img/24.png','keywords' =>'magic,communication','category'=>'Equipment'],
@@ -49,7 +48,7 @@ foreach($items as $key=>$value){
 			$description=$value['description'];
 			$insert->bindValue(':name',$value['name'],PDO::PARAM_STR);
 			$insert->bindValue(':price',(int)$value['price'],PDO::PARAM_INT);
-			$insert->bindValue(':img_path','/img/' . $key . '.png',PDO::PARAM_STR);
+			$insert->bindValue(':img_path','/img' . '/' . $key . '.png',PDO::PARAM_STR);
 			$insert->bindValue(':description',$value['description'],PDO::PARAM_STR);
 			$insert->bindValue(':short_description',generateShortDescription($value['description']),PDO::PARAM_STR);
 			$insert->bindValue(':keywords',$value['keywords'],PDO::PARAM_STR);

@@ -1,5 +1,7 @@
-<?php require __DIR__ . "/../controllers/pc_index.php"; ?>
+<?php 
 
+require __DIR__ . "/../controllers/pc_index.php"; 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,10 +13,6 @@
 <body>
     <?php require '../views/partials/navbar.php'; ?>
     <?php require '../views/partials/table.php'; ?>
-    <?=populateSidebar($dbc)?>
-    <div class='container'>
-    <?=generateTable($dbc)?>
-    </div>
     <?php require '../views/partials/footer.php'; ?>
     <?php require '../views/partials/common_js.php'; ?>
 </body>

@@ -10,8 +10,8 @@ $query = 'CREATE TABLE purchases (
     po_id INT UNSIGNED NOT NULL,
     current_cost DOUBLE PRECISION(6,2) NOT NULL,
     PRIMARY KEY (po_id, item_id),
-    FOREIGN KEY (item_id) REFERENCES items (id),
-    FOREIGN KEY (po_id) REFERENCES purchase_orders (id)
+    FOREIGN KEY (item_id) REFERENCES items (item_id),
+    FOREIGN KEY (po_id) REFERENCES purchase_orders (po_id)
 )';
 
 $dbc->exec($query);

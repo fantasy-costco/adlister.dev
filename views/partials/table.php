@@ -1,6 +1,11 @@
 <?php
 require_once __DIR__ . '/../../database/seeds/items_seeder.php';
 require_once __DIR__ . '/../../utils/Input.php';
+if(!Input::has('item')){
+	echo populateSidebar($dbc);
+	echo "<div class='container'>" . generateTable($dbc) ."</div>";
+	echo generatePageLinks(runQuery($dbc,false));
+}
 function getOffset($dbc,$limit){
 	$offset=intval(Input::get('page'));
 	$pageCount=pageCount($dbc,5);
@@ -19,12 +24,19 @@ function pageCount($dbc,$limit){
 	}
 		return $count;
 }
-function generateTable($dbc){
+function runQuery($dbc,$limit=true){
 	if(empty($_GET)){
 		return '';
 	}
-	$query=generateQuery($dbc);
+	if($limit==false){
+		$query=generateQuery($dbc,$limit);
+	}else{
+		$query=generateQuery($dbc);
+	}
 	$result=$dbc->prepare($query);
+	if(Input::has('search')){
+		$result->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+	}
 	if(Input::has('category')){
 		$result->bindValue(':category',Input::get('category'),PDO::PARAM_STR);
 	}
@@ -34,12 +46,16 @@ function generateTable($dbc){
 	if(Input::has('max')){
 		$result->bindValue(':max',Input::get('min'),PDO::PARAM_INT);
 	}
-	if(Input::get('search')=='viewAll' and count($_GET)==1){
+	if((Input::get('search')=='viewAll') and count($_GET)==1){
 		$result=$dbc->query($query);
 	}else{
 		$result->execute();
 	}
 	$allItems=$result->fetchAll(PDO::FETCH_ASSOC);
+	return $allItems;
+}
+function generateTable($dbc){
+	$allItems=runQuery($dbc);
 	$body='<table>
 	<th>Picture</th>
 	<th>Item Name</th>
@@ -47,8 +63,8 @@ function generateTable($dbc){
 	<th>Short Description</th>';
 	foreach($allItems as $key=>$value){
 		$body.='<tr>
-			<td><img src="' . $value['img_path'] .'"></td>
-			<td>' . $value['item_name'] .'</td>
+			<td><a href="/?item=' . $value['item_id'] . '"><img src="' . $value['img_path'] .'"></a></td>
+			<td><a href="/?item=' . $value['item_id'] . '">' . $value['item_name'] .'</a></td>
 			<td>' . $value['item_price'] . '</td>
 			<td>' . $value['short_description'] . '</td>
 			<td>' . $value['keywords'] . '</td>
@@ -109,13 +125,13 @@ function populateSidebar($dbc){
 	}
 	return $sidebar;
 }
-function generateQuery($dbc){
+function generateQuery($dbc,$limit=true){
 	$query='SELECT * FROM items';
 	if(Input::has('category')){
 		$query.=' WHERE category=:category';
 	}
 	if(Input::has('search')){
-		if(Input::get('search'!='viewAll')){
+		if(Input::get('search')!='viewAll'){
 			if(stripos($query,'WHERE')==false){
 			$query.=" WHERE ";
 		}else{
@@ -141,7 +157,7 @@ function generateQuery($dbc){
 		$query.='(item_price <= :max)';
 	}
 	$query.=' ORDER BY item_name ';
-	if(Input::has('search')){
+	if($limit){
 		$query.=' LIMIT 5 OFFSET ' .getOffset($dbc,5) * 5;
 	}
 	return $query;
@@ -158,4 +174,17 @@ function generateURL(){
 		$url.='category=' . Input::get('category');
 	}
 	return $url;
+}
+function generatePageLinks($itemArray){
+	$pageLinkHTML='';
+	$totalItems=count($itemArray);
+	if($totalItems%5==0){
+		$pages=$totalItems/5;
+	}else{
+		$pages=($totalItems/5)+1;
+	}
+	for($i=1;$i<$pages;$i++){
+		$pageLinkHTML.='<a href="' . generateURl() . '">' . $i . '</a>';
+	}
+	return $pageLinkHTML;
 }
