@@ -1,7 +1,7 @@
 <?php 
 
-require __DIR__ . "/../controllers/pc_index.php"; ?>
-
+require __DIR__ . "/../controllers/pc_index.php"; 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +11,11 @@ require __DIR__ . "/../controllers/pc_index.php"; ?>
 	</audio>
 </head>
 <body>
-	<?php var_dump($_GET);?>
     <?php require '../views/partials/navbar.php'; ?>
-    <?php require '../views/partials/table.php'; ?>
-    <?=populateSidebar($dbc)?>
-    <div class='container'>
-    <?=generateBodyHTML($dbc)?>
-    </div>
+<<<<<<< HEAD
+    <?php require_once '../views/partials/table.php'; ?>
     <?php require '../views/partials/footer.php'; ?>
+>>>>>>> 422514d8e1155925e4304b4d4543a8d987dbeafc
     <?php require '../views/partials/common_js.php'; ?>
 </body>
 </html>
