@@ -460,6 +460,7 @@ a:hover, a:active, a:visited {
 /*Footer*/
 
 footer {
+	display:block;
 	background-color: #efefef;
 	border-top: 3px solid #0073a6;
 	position: absolute;
