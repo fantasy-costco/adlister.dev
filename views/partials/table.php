@@ -4,7 +4,8 @@ require_once __DIR__ . '/../../utils/Input.php';
 
 if(!Input::has('item') && count($_GET)>0){
 $output=<<<'DOC'
-    <div style="position:relative;display:flex;width:100%;height:auto">
+	<div style="display:flex;position:relative;flex-direction:row;margin-bottom:200px">
+    <div style="position:relative;display:flex;width:100%;height:auto;marigin:auto">
     	<div class="col-1"style="position:relative;height:400px;min-width:150px;max-width:150px;">
 DOC;
 $output.=populateSidebar($dbc) . '
@@ -13,7 +14,7 @@ $output.=populateSidebar($dbc) . '
     	generateTable($dbc) .
     	generatePageLinks(runQuery($dbc,false)) .'
     	</div>
-    </div>';
+    </div></div>';
 echo $output;
 }
 function getOffset($dbc,$limit){
@@ -90,11 +91,14 @@ function populateSidebar($dbc){
 		if(Input::get('search')=='viewAll'){
 			$searchResults=$dbc->query('SELECT category, count(*) as count FROM items GROUP BY category')->fetchAll(PDO::PARAM_STR);
 		}else{
-			$search=$dbc->prepare('SELECT category, count(category) as count  FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm GROUP BY category LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
+			$search=$dbc->prepare('SELECT category, count(category) as count  FROM items GROUP BY category LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
 			$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
 			$search->execute();
 			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
 		}
+	}elseif(Input::has('category')){
+
+	}
 			$sidebar="<a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
 		foreach($searchResults as $key=>$value){
 			$sidebar.='<li><a href=/?search=' . Input::get('search') . '&category=' . $value['category'] .'>' .$value['category'] . '('. $value['count'] .')</a></li>';
@@ -133,7 +137,6 @@ function populateSidebar($dbc){
 		<li><a href="' . generateURl() . '&min=500&max=1000">500-1000GP (' . $searchResults[0]['500_1000'] . ')</li></a>
 		<li><a href="' . generateURl() . '&min=1000">1000GP+ (' . $searchResults[0]['1000_'] . ')</li></a>
 		</ul>';
-	}
 	return $sidebar;
 }
 function generateQuery($dbc,$limit=true){
@@ -195,7 +198,7 @@ function generatePageLinks($itemArray){
 		$pages=($totalItems/5)+1;
 	}
 	for($i=1;$i<$pages;$i++){
-		$pageLinkHTML.='<a href="' . generateURl() . '">' . $i . '</a>';
+		$pageLinkHTML.='<a href="' . generateURl() . '&page=' . ($i-1) .'">' . $i . '</a>';
 	}
 	return $pageLinkHTML;
 }

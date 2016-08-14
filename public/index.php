@@ -12,10 +12,8 @@ require __DIR__ . "/../controllers/pc_index.php";
 </head>
 <body>
     <?php require '../views/partials/navbar.php'; ?>
-<<<<<<< HEAD
     <?php require_once '../views/partials/table.php'; ?>
     <?php require '../views/partials/footer.php'; ?>
->>>>>>> 422514d8e1155925e4304b4d4543a8d987dbeafc
     <?php require '../views/partials/common_js.php'; ?>
 </body>
 </html>
