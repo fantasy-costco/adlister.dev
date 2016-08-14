@@ -1,9 +1,10 @@
 <?php
 $_ENV = include __DIR__ . '/../../env.php';
 require_once __DIR__ . '/../db_connect.php';
-$query='DROP TABLE IF EXISTS  items';
-$dbc->exec($query);
-$query='CREATE TABLE IF NOT EXISTS items(
+
+$dbc->exec('DROP TABLE IF EXISTS items');
+
+$query = 'CREATE TABLE items (
 		item_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 		item_name VARCHAR(100) NOT NULL,
 		item_price INT NOT NULL,
@@ -12,6 +13,7 @@ $query='CREATE TABLE IF NOT EXISTS items(
 		short_description VARCHAR(200),
 		keywords VARCHAR(100),
 		category VARCHAR(100),
-		PRIMARY KEY(item_id)
-);';
+		PRIMARY KEY (item_id)
+)';
+
 $dbc->exec($query);
