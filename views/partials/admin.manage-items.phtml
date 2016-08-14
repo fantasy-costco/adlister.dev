@@ -8,6 +8,9 @@
 			<th>Price</th>
 			<th>Description</th>
 			<th>Image</th>
+			<th>Keywords</th>
+			<th>Category</th>
+			<th>Edit/Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -15,12 +18,25 @@
 			<tr>
 			<?php foreach ($properties as $column => $value) : ?>
 				<?php if (!($column == "short_description")) : ?>
-					<?php if (is_numeric($value)) : ?>
+					<?php if($column == "item_id") : ?>
+						<td align="center">
+							<form class="" action="admin_view_all_items.php" method="post">
+								<?= $value; ?>
+								<input type="hidden" name="id" value="<?= $value; ?>"></td>
+					<?php elseif ($column == "item_cost") : ?>
 						<td align="center"><?=$value;?></td>
 					<?php elseif ($column == "img_path") : ?>
-						<td><img class="productThumb" src="<?= $value;?>"></td> 
-					<?php else : ?>	
+						<td><img class="productThumb" src="<?= $value;?>"></td>
+					<?php elseif ($column == "category") : ?>
 						<td><?=$value;?></td>
+						<td>
+								<button class="button edit" type="submit" name="submit" value="edit">Edit</button>
+								<button class="button delete" type="submit" name="submit" value="delete">Delete</button>
+							</form>
+						</td>
+					<?php else : ?>
+						<td><?= $value; ?></td>
+
 					<?php endif; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
