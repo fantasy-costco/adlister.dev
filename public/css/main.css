@@ -191,7 +191,6 @@ aside {
 	#large-content-menu {
 		display: none;
 	}
-
 	#medium-content-menu {
 		display: flex;
 		height: 32px;
@@ -210,20 +209,16 @@ aside {
 	.option {
 		display: none;
 	}
-
 	#logo-div-top {
 		display:inline;
 		width:16.66%;
 	}
-
 	#logo-div {
 		display:none;
 	}
-
 	#logo-top {
 		height:30px;
 	}
-
 	#small-search {
 		display:inline;
 		position:relative;
@@ -232,25 +227,20 @@ aside {
 		padding: 0px 15px 5px 0px;
 		/*flex-shrink:;*/
 	}
-
 	#main-header-bar {
 		height: 40px;
 		background-color: red;
 		padding: 15px;
 	}
-
 	#search-div {
 		display: none;
 	}
-
 	#searchbar {
 		top: 0px;
 	}
-
 	#search-icon {
 		top: -30px;
 	}
-
 	#medium-content-menu {
 		top: 0px;
 	}
@@ -273,6 +263,7 @@ aside {
 .middle {
 	margin: auto;
 }
+
 div.formInput, div.formCheckbox {
 	display: block;
 	margin-top: 5px;
@@ -301,6 +292,17 @@ form {
 .col-12 {width:100%; float:left; padding:30px; clear:both;}
 
 /*Header Tags*/
+
+h2.productName {
+	color: #333132;
+	font-size: 1.75em;
+	text-align: left;
+}
+
+h3.price {
+	color: #0073a6;
+	font-size: 1.35em;
+}
 
 h1 {
 	font-size: 1.75em;
@@ -402,6 +404,10 @@ input {
 	padding: 4px;
 	width: 100%;
 }
+
+button.blueButton {
+	background-color: #0073a6;
+}	
 
 button.blueButton {
 	background-color: #0073a6;
