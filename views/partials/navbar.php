@@ -9,7 +9,7 @@
 			<a href="/"><img id="logo" src="/img/Fantasy-Costco-by-Ryanphantom.png"></a>
 		</div>
 		<div id="small-search">
-			<form method="GET">
+			<form method="GET" style="margin-top:0px">
 			<div style="display:block;position:relative;width:100%;background-color:purple;height:30px;min-width:65px;min-width:70px;max-width:70px;padding:5px;border:1px solid black">Shop
 				<input type="image" id="list-icon" src="/img/interface.png" style="background-color:yellow">
 			</form>
@@ -17,7 +17,7 @@
 		</div>
 		<div id="search-bar-div">
 			<div id="search-bar-inner-div">
-			<form method="GET">
+			<form method="GET" style="margin-top:0px">
 				<input type="text" id="searchbar" name="search">
 				<input type="image" src="/img/loupe.svg" id="search-icon">
 			</form>
@@ -49,9 +49,9 @@
 	</div>
 	<div id="search-div">
 		<img id="list-icon" src="/img/interface.png">
-		<span><a class="option">Consumables</a></span>
-		<span><a class="option">Equipment</a></span>
-		<span><a class="option">Misc</a></span>
-		<span><a class="option">Weapons</a></span>
+		<span><a href="/?category=Consumable" class="option">Consumables</a></span>
+		<span><a href="/?category=Equipment"class="option">Equipment</a></span>
+		<span><a href="/?category=Misc" class="option">Misc</a></span>
+		<span><a href="/?category=Weapon" class="option">Weapons</a></span>
 	</div>
 </header>

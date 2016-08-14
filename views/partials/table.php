@@ -1,6 +1,21 @@
 <?php
 require_once __DIR__ . '/../../database/seeds/items_seeder.php';
 require_once __DIR__ . '/../../utils/Input.php';
+
+if(!Input::has('item') && count($_GET)>0){
+$output=<<<'DOC'
+    <div style="position:relative;display:flex;width:100%;height:auto">
+    	<div class="col-1"style="position:relative;height:400px;min-width:150px;max-width:150px;">
+DOC;
+$output.=populateSidebar($dbc) . '
+    	</div>
+    	<div class="col-11" style="display:inline;position:relative;height:auto;">' .
+    	generateTable($dbc) .
+    	generatePageLinks(runQuery($dbc,false)) .'
+    	</div>
+    </div>';
+echo $output;
+}
 function getOffset($dbc,$limit){
 	$offset=intval(Input::get('page'));
 	$pageCount=pageCount($dbc,5);
@@ -19,29 +34,38 @@ function pageCount($dbc,$limit){
 	}
 		return $count;
 }
-function generateBodyHTML($dbc){
-	$body='';
-	if(Input::has('search')){
-		if(Input::get('search')!='viewAll'){
-			$body=searchResults($dbc);
-		}else{
-			$body=viewAll($dbc);
-		}
-	}else if(Input::has('category')){
-		$body=viewByCategory($dbc);
+function runQuery($dbc,$limit=true){
+	if(empty($_GET)){
+		return '';
 	}
-	return $body;
-}
-function viewAll($dbc){
-	if(Input::has('category')){
-		$query=("SELECT * FROM items WHERE category=:category ORDER BY item_name LIMIT 5 OFFSET " .getOffset($dbc,5) * 5);
-		$result=$dbc->prepare($query);
-		$result->bindValue(':category',Input::get('category'),PDO::PARAM_STR);
-		$result->execute();
-		$allItems=$result->fetchAll(PDO::FETCH_ASSOC);
+	if($limit==false){
+		$query=generateQuery($dbc,$limit);
 	}else{
-		$allItems=$dbc->query("SELECT * FROM items ORDER BY item_name LIMIT 5 OFFSET " .getOffset($dbc,5) * 5)->fetchAll(PDO::FETCH_ASSOC);
+		$query=generateQuery($dbc);
 	}
+	$result=$dbc->prepare($query);
+	if(Input::has('search')){
+		$result->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+	}
+	if(Input::has('category')){
+		$result->bindValue(':category',Input::get('category'),PDO::PARAM_STR);
+	}
+	if(Input::has('min')){
+		$result->bindValue(':min',Input::get('min'),PDO::PARAM_INT);
+	}
+	if(Input::has('max')){
+		$result->bindValue(':max',Input::get('min'),PDO::PARAM_INT);
+	}
+	if((Input::get('search')=='viewAll') and count($_GET)==1){
+		$result=$dbc->query($query);
+	}else{
+		$result->execute();
+	}
+	$allItems=$result->fetchAll(PDO::FETCH_ASSOC);
+	return $allItems;
+}
+function generateTable($dbc){
+	$allItems=runQuery($dbc);
 	$body='<table>
 	<th>Picture</th>
 	<th>Item Name</th>
@@ -49,8 +73,8 @@ function viewAll($dbc){
 	<th>Short Description</th>';
 	foreach($allItems as $key=>$value){
 		$body.='<tr>
-			<td><img src="' . $value['img_path'] .'"></td>
-			<td>' . $value['item_name'] .'</td>
+			<td><a href="/?item=' . $value['item_id'] . '"><img class="productThumb" src="' . $value['img_path'] .'"></a></td>
+			<td><a href="/?item=' . $value['item_id'] . '">' . $value['item_name'] .'</a></td>
 			<td>' . $value['item_price'] . '</td>
 			<td>' . $value['short_description'] . '</td>
 			<td>' . $value['keywords'] . '</td>
@@ -59,43 +83,7 @@ function viewAll($dbc){
 	$body.='</table>';
 	return $body;
 }
-function searchResults($dbc){
-	//Search results if not filtered by category
-	if(!Input::has('category')){
-		$search=$dbc->prepare('SELECT * FROM items WHERE item_name LIKE :searchterm OR keywords LIKE :searchterm ORDER BY item_name LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
-		$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
-		$search->execute();
-	}
-	//Searchc resuls if filtered by category
-	else{
-		$search=$dbc->prepare('SELECT * FROM items WHERE (item_name LIKE :searchterm OR keywords LIKE :searchterm) AND category=:category ORDER BY item_name LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
-		$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
-		$search->bindValue(':category',Input::get('category',PDO::PARAM_STR));
-		$search->execute();
-	}
-	$body='<div>';
-	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
-	if(count($searchResults)<1){
-		$body.='No search results found';
-	}else{
-		$body.='<table>
-		<th>Picture</th>
-		<th>Item Name</th>
-		<th>Price</th>
-		<th>Short Description</th>';
-		foreach($searchResults as $key=>$value){
-			$body.='<tr>
-				<td><img src="' . $value['img_path'] .'"></td>
-				<td>' . $value['item_name'] .'</td>
-				<td>' . $value['item_price'] . '</td>
-				<td>' . $value['short_description'] . '</td>
-				<td>' . $value['keywords'] . '</td>
-			</tr>';
-		}
-		$body.='</table>';
-	}
-	return $body . '</div>';
-}
+//Fix for when only has category
 function populateSidebar($dbc){
 	$sidebar='';
 	if(Input::has('search')){
@@ -107,7 +95,7 @@ function populateSidebar($dbc){
 			$search->execute();
 			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
 		}
-			$sidebar="<div><a href='http://adlister.dev?search=viewAll'>View All</a>\nCategories:\n<ul>";
+			$sidebar="<a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
 		foreach($searchResults as $key=>$value){
 			$sidebar.='<li><a href=/?search=' . Input::get('search') . '&category=' . $value['category'] .'>' .$value['category'] . '('. $value['count'] .')</a></li>';
 		}
@@ -139,35 +127,75 @@ function populateSidebar($dbc){
 			$search->execute();
 			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
 		}
-		$sidebar.='By Price<ul>
-		<li>0-100 (' . $searchResults[0]['less_than_100'] .')</li>
-		<li>1000-500 (' . $searchResults[0]['100_500'] . ')</li>
-		<li>5000-1000 (' . $searchResults[0]['500_1000'] . ')</li>
-		<li>1000+ (' . $searchResults[0]['1000_'] . ')</li>
-		</ul></div>';
+		$sidebar.='Filter By Price<ul>
+		<li><a href="' . generateURl() .'max=100">0-100GP (' . $searchResults[0]['less_than_100'] .')</li></a>
+		<li><a href="' . generateURl() .'&min=100&max=500">100-500GP (' . $searchResults[0]['100_500'] . ')</a></li>
+		<li><a href="' . generateURl() . '&min=500&max=1000">500-1000GP (' . $searchResults[0]['500_1000'] . ')</li></a>
+		<li><a href="' . generateURl() . '&min=1000">1000GP+ (' . $searchResults[0]['1000_'] . ')</li></a>
+		</ul>';
 	}
 	return $sidebar;
 }
-function viewByCategory($dbc){
-	$query="SELECT * FROM items WHERE category=:category ORDER BY item_name LIMIT 5 OFFSET " .getOffset($dbc,5) * 5;
-	$filterByCategory=$dbc->prepare($query);
-	$filterByCategory->bindValue(':category',Input::get('category'));
-	$filterByCategory->execute();
-	$categoryArray=$filterByCategory->fetchAll(PDO::FETCH_ASSOC);
-	$body='<table>
-	<th>Picture</th>
-	<th>Item Name</th>
-	<th>Price</th>
-	<th>Short Description</th>';
-	foreach($categoryArray as $key=>$value){
-		$body.='<tr>
-			<td><img src="' . $value['img_path'] .'"></td>
-			<td>' . $value['item_name'] .'</td>
-			<td>' . $value['item_price'] . '</td>
-			<td>' . $value['short_description'] . '</td>
-			<td>' . $value['keywords'] . '</td>
-		</tr>';
+function generateQuery($dbc,$limit=true){
+	$query='SELECT * FROM items';
+	if(Input::has('category')){
+		$query.=' WHERE category=:category';
 	}
-	$body.='</table>';
-	return $body;
+	if(Input::has('search')){
+		if(Input::get('search')!='viewAll'){
+			if(stripos($query,'WHERE')==false){
+			$query.=" WHERE ";
+		}else{
+			$query.=" AND ";
+		}
+		$query.='(item_name LIKE :searchterm OR keywords LIKE :searchterm OR item_description LIKE :searchterm)';
+		}
+	}
+	if(Input::has('min')){
+		if(stripos($query,'WHERE')==false){
+			$query.=" WHERE ";
+		}else{
+			$query.=" AND ";
+		}
+		$query.='(item_price >= :min)';	
+	}
+	if(Input::has('max')){
+		if(stripos($query,'WHERE')==false){
+			$query.=" WHERE ";
+		}else{
+			$query.=" AND ";
+		}
+		$query.='(item_price <= :max)';
+	}
+	$query.=' ORDER BY item_name ';
+	if($limit){
+		$query.=' LIMIT 5 OFFSET ' .getOffset($dbc,5) * 5;
+	}
+	return $query;
+}
+function generateURL(){
+	$url='';
+	if(Input::has('search')){
+		$url.='?search=' . Input::get('search');
+	}
+	if(Input::has('category')){
+		if(strlen($url)>0){
+			$url.='&';
+		}
+		$url.='category=' . Input::get('category');
+	}
+	return $url;
+}
+function generatePageLinks($itemArray){
+	$pageLinkHTML='';
+	$totalItems=count($itemArray);
+	if($totalItems%5==0){
+		$pages=$totalItems/5;
+	}else{
+		$pages=($totalItems/5)+1;
+	}
+	for($i=1;$i<$pages;$i++){
+		$pageLinkHTML.='<a href="' . generateURl() . '">' . $i . '</a>';
+	}
+	return $pageLinkHTML;
 }
