@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../database/seeds/items_seeder.php';
+//require_once __DIR__ . '/../../database/seeds/items_seeder.php';
 require_once __DIR__ . '/../../utils/Input.php';
 
 if(!Input::has('item') && count($_GET)>0){
@@ -109,18 +109,18 @@ function populateSidebar($dbc){
 		$sidebar.='</ul>';
 		if(Input::get('search')=='viewAll'){
 			$query='SELECT (
-			SELECT count(*) FROM items 
-			WHERE item_price <= 100)as less_than_100, 
+			SELECT count(*) FROM items
+			WHERE item_price <= 100)as less_than_100,
 			(
 			SELECT count(*) FROM items WHERE item_price > 100 AND item_price <=500) as 100_500,
 			(
 			SELECT count(*) FROM items WHERE (item_price>500 AND item_price <=1000)) as 500_1000,(
-			SELECT count(*) FROM items WHERE item_price>1000) as 1000_';		
+			SELECT count(*) FROM items WHERE item_price>1000) as 1000_';
 			$searchResults=$dbc->query($query)->fetchAll(PDO::FETCH_ASSOC);
 		}else{
 			$query='SELECT (
-			SELECT count(*) FROM items 
-			WHERE (item_price <= 100) AND (item_name LIKE :searchterm OR keywords LIKE :searchterm))as less_than_100, 
+			SELECT count(*) FROM items
+			WHERE (item_price <= 100) AND (item_name LIKE :searchterm OR keywords LIKE :searchterm))as less_than_100,
 			(
 			SELECT count(*) FROM items WHERE (item_price > 100 AND item_price <=500)
 			AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)) as 100_500,
@@ -163,7 +163,7 @@ function generateQuery($dbc,$limit=true){
 		}else{
 			$query.=" AND ";
 		}
-		$query.='(item_price >= :min)';	
+		$query.='(item_price >= :min)';
 	}
 	if(Input::has('max')){
 		if(stripos($query,'WHERE')==false){
