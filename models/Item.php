@@ -155,6 +155,18 @@ class Item extends Model {
 	        }
 	}
 
+	public static function findItemByName($item_name) {
+				self::dbConnect();
+				$find = "SELECT * FROM items WHERE item_name = :item_name";
+				$stmt = self::$dbc->prepare($find);
+				$stmt->bindValue(':item_name', $item_name, PDO::PARAM_STR);
+
+				if (bindValuesAndExecuteQuery($stmt)) {
+						$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
+						return $stmt->fetch();
+				}
+	}
+
 
 		public function update(){
 
