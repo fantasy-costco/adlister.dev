@@ -60,11 +60,12 @@
     </div>
 
     <div class='formButton'>
-    	<button type='submit' name="submit" value="add_new_item">Submit</button>
+    	<button class="blueButton" type='submit' name="submit" value="add_new_item">Submit</button>
     </div>
     </form>
 	</div>
 
 	<?php require '../views/partials/common_js.php'; ?>
+    <?php require '../views/partials/footer.php'; ?>
 </body>
 </html>

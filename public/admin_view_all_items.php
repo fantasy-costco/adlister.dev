@@ -43,5 +43,6 @@ extract(pageController());
 	</div>
 
 	<?php require '../views/partials/common_js.php'; ?>
+	<?php require '../views/partials/footer.php'; ?>
 </body>
 </html>

@@ -43,7 +43,6 @@ function pageController() {
   $items = Item::all();
 
   $item = grabItemFromArray($items, $itemId);
-  var_dump($item);
 	return [
 		'item' => $item
 	];
@@ -106,11 +105,12 @@ extract(pageController());
     </div>
 
     <div class='formButton'>
-    	<button type='submit' name="submit" value="update">Submit</button>
+    	<button class="blueButton" type='submit' name="submit" value="update">Submit</button>
     </div>
     </form>
 	</div>
 
 	<?php require '../views/partials/common_js.php'; ?>
+    <?php require '../views/partials/footer.php'; ?>
 </body>
 </html>
