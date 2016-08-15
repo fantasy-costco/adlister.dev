@@ -8,7 +8,6 @@ require __DIR__ . "/../utils/Input.php";
 
 function pageController() {
 	$pageTitle = "FANTASY COSTCO: WHERE ALL YOUR DREAMS COME TRUE";
-	$items = Item::all();
 
 	if (Input::isPost() && $_REQUEST["submit"] == "delete") {
 		$item = new Item;
@@ -18,6 +17,8 @@ function pageController() {
 		var_dump($_REQUEST['id']);
 		var_dump(false);
 	}
+
+	$items = Item::all();
 
 	return [
 		"pageTitle" => $pageTitle,

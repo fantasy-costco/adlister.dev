@@ -116,11 +116,11 @@ class Item extends Model {
 		$stmt = self::$dbc->prepare($query);
 		$id = (int) $this->attributes['item_id'];
 		var_dump($id);
-		var_dump($dbc);
-		$stmt->bindValue(":item_id", $id, PDO::PARAM_STR);
+
+		$stmt->bindValue(":item_id", $id, PDO::PARAM_INT);
 		var_dump($stmt);
 
-		$stmt->execute();
+		var_dump($stmt->execute());
 	}
 
 	public function checkFileType($Uploadname) {

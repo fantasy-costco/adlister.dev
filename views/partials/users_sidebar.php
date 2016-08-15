@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../database/seeds/items_seeder.php';
+//require_once __DIR__ . '/../../database/seeds/items_seeder.php';
 require_once __DIR__ . '/../../utils/Input.php';
 require_once __DIR__ . '/table.php';
 
