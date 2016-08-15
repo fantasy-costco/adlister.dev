@@ -26,7 +26,7 @@
 					<?php elseif ($column == "item_cost") : ?>
 						<td align="center"><?=$value;?></td>
 					<?php elseif ($column == "item_name") : ?>
-							<td><a href="item.php/?item=<?php $value; ?>"  ><?=$value;?></a></td>
+							<td><a href="item.php?item=<?= $value; ?>"><?=$value;?></a></td>
 					<?php elseif ($column == "img_path") : ?>
 						<td><img class="productThumb" src="<?= $value;?>"></td>
 					<?php elseif ($column == "category") : ?>
