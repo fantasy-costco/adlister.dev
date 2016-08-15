@@ -10,39 +10,33 @@ class Item extends Model {
 		$stmt = self::$dbc->query($select);
 		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
 		$items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 		return $items;
 	}
 
 	public function saveUploadedImage() {
 		if(isset($_FILES['img_path'])){
-		  $UploadName = $_FILES['img_path']['name'];
-		  $UploadTmp = $_FILES['img_path']['tmp_name'];
-		  $UploadType = $_FILES['img_path']['type'];
-		  $FileSize = $_FILES['img_path']['size'];
-
-		  $UploadName = preg_replace("#[^a-z0-9.]#i", "", $UploadName);
-
+			$UploadName = $_FILES['img_path']['name'];
+			$UploadTmp = $_FILES['img_path']['tmp_name'];
+			$UploadType = $_FILES['img_path']['type'];
+			$FileSize = $_FILES['img_path']['size'];
+			$UploadName = preg_replace("#[^a-z0-9.]#i", "", $UploadName);
+			
 			if(!$this->checkFileType($UploadName)){
 				die('Error - File must be .jpeg or .png');
 			}
 
-		  if(($FileSize > 50000)){
-		    die('Error - File too big.');
-		  }
+			if(($FileSize > 50000)){
+				die('Error - File too big.');
+			}
 
-		  if(!$UploadTmp) {
-		    die("No File Selected. Please upload a file.");
-		  } else {
-
-		    //Must first figure out where the directory path should be for
-		    //when uploading files. All uploaded images should be placed in
-		    //  /img directory.
+			if(!$UploadTmp) {
+				die("No File Selected. Please upload a file.");
+		 	} else {
+			// Must first figure out where the directory path should be for when uploading files. All uploaded images should be placed in /img directory.
 				$image_url = $this->convert($UploadName);
-		    move_uploaded_file($UploadTmp, __DIR__ . '/../public/' . $image_url);
+				move_uploaded_file($UploadTmp, __DIR__ . '/../public/' . $image_url);
 				return $image_url;
-		  }
-
+			}
 		}
 	}
 
@@ -53,7 +47,6 @@ class Item extends Model {
 
 	protected function insert() {
 		$new_img_url = $this->convert($this->attributes['img_path']);
-
 		$insert = "INSERT INTO items (item_name, item_price, item_description, img_path, short_description, keywords, category) VALUES (:item_name, :item_price, :item_description, :img_path, :short_description, :keywords, :category)";
 		$stmt = self::$dbc->prepare($insert);
 		$stmt->bindValue(':item_name', $this->attributes['item_name'], PDO::PARAM_STR);
@@ -68,96 +61,97 @@ class Item extends Model {
 	}
 
 	public function saveItem() {
-			if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
-					self::updateItem($item_id);
-			} else {
-				$this->insert();
-				$this->saveUploadedImage($this->attributes['img_path']);
-			}
+		if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
+				self::updateItem($item_id);
+		} else {
+			$this->insert();
+			$this->saveUploadedImage($this->attributes['img_path']);
+		}
 	 }
 
 	 public function updateItem($item_id) {
- 		$query = "UPDATE " . static::$table . " SET ";
- 		$first_value = true;
-
- 		foreach ($this->attributes as $key => $value) {
-			if ( $key == 'item_id'){
- 				continue;
- 			}
-
- 			if ( $first_value ){
- 				$first_value = false;
- 				$query .= $key . ' = :' . $key;
- 			} else {
+		$query = "UPDATE " . static::$table . " SET ";
+		$first_value = true;
+		foreach ($this->attributes as $key => $value) {
+			if ($key == 'item_id'){
+				continue;
+			}
+			if ($first_value){
+				$first_value = false;
+				$query .= $key . ' = :' . $key;
+			} else {
 				$query .= ', ' . $key . ' = :' . $key;
- 			}
- 		}
+			}
+		}
 
- 		$query .= ' WHERE item_id = :item_id';
- 		$stmt = self::$dbc->prepare($query);
+		$query .= ' WHERE item_id = :item_id';
+		$stmt = self::$dbc->prepare($query);
 
- 		foreach ($this->attributes as $key => $value)	{
-			if($key == 'item_price') {
+		foreach ($this->attributes as $key => $value)	{
+			if ($key == 'item_price') {
 				$stmt->bindValue(':' . $key, $value, PDO::PARAM_INT);
 			}
-			if($key == 'image_path') {
+			if ($key == 'image_path') {
 				$value = $this->saveUploadedImage($value);
 				$stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
 			}
 			$stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
- 		}
-
- 		$stmt->execute();
- 	}
+		}
+		$stmt->execute();
+	}
 
 	public function delete() {
 		self::dbConnect();
 		$query = "DELETE FROM " . "items" . " WHERE item_id = :item_id";
 		$stmt = self::$dbc->prepare($query);
 		$id = (int) $this->attributes['item_id'];
-		var_dump($id);
-
 		$stmt->bindValue(":item_id", $id, PDO::PARAM_INT);
-		var_dump($stmt);
-
-		var_dump($stmt->execute());
+		$stmt->execute();
 	}
 
 	public function checkFileType($Uploadname) {
 		$file_parts = pathinfo($Uploadname);
-
 		switch($file_parts['extension']) {
-		    case "jpeg":
-					return true;
-			    break;
-
-				case "jpg":
-					return true;
-
-		    case "png":
-					return true;
-					break;
-
-		    default:
-					return false;
+			case "jpeg":
+				return true;
+				break;
+			case "jpg":
+				return true;
+			case "png":
+				return true;
+				break;
+			default:
+				return false;
 		}
 	}
 
 	public static function find($item_id) {
-	        self::dbConnect();
-	        $find = "SELECT * FROM items WHERE item_id = :item_id";
-	        $stmt = self::$dbc->prepare($find);
-	        $stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
-
-	        if (bindValuesAndExecuteQuery($stmt)) {
-	            $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
-	            return $stmt->fetch();
-	        }
+		self::dbConnect();
+		$find = "SELECT * FROM items WHERE item_id = :item_id";
+		$stmt = self::$dbc->prepare($find);
+		$stmt->bindValue(':item_id', $item_id, PDO::PARAM_INT);
+		foreach ($this->attributes as $attribute => $value) {
+			$stmt->bindValue(":$attribute", $value, PDO::PARAM_STR);
+		}
+		if ($stmt->execute()) {
+			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
+			return $stmt->fetch();
+		}
 	}
 
-
-		public function update(){
-
+	public static function findItemByName($item_name) {
+		self::dbConnect();
+		$find = "SELECT * FROM items WHERE item_name = :item_name";
+		$stmt = self::$dbc->prepare($find);
+		foreach ($this->attributes as $attribute => $value) {
+			$stmt->bindValue(":$attribute", $value, PDO::PARAM_STR);
 		}
-	// protected static function findItemById();
+		if ($stmt->execute()) {
+			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Item');
+			return $stmt->fetch();
+		}
+	}
+
+	public function update() {}
+	
 }
