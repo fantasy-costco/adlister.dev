@@ -38,9 +38,7 @@ class User extends Model {
 		$stmt->execute();
 	}
 
-	protected function delete(){
-
-	}
+	protected function delete(){}
 
 	public static function find($id) {
 		self::dbConnect();
