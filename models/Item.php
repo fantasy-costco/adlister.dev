@@ -327,8 +327,8 @@ public static function generateTable(){
 	<th>Short Description</th>';
 	foreach($allItems as $key=>$value){
 		$body.='<tr>
-			<td><a href="/?item=' . $value['item_id'] . '"><img class="productThumb" src="' . $value['img_path'] .'"></a></td>
-			<td><a href="/item.php?item=' . $value['item_id'] . '">' . $value['item_name'] .'</a></td>
+			<td><a href="/?item=' . $value['item_name'] . '"><img class="productThumb" src="' . $value['img_path'] .'"></a></td>
+			<td><a href="/item.php?item=' . $value['item_name'] . '">' . $value['item_name'] .'</a></td>
 			<td>' . $value['item_price'] . '</td>
 			<td>' . $value['short_description'] . '</td>
 			<td>' . $value['keywords'] . '</td>
