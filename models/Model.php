@@ -45,16 +45,17 @@ abstract class Model {
     }
 
     public static function find($id) {
-			self::dbConnect();
-			$find = "SELECT * FROM users WHERE id = :id";
-			$stmt = self::$dbc->prepare($find);
-			$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+		self::dbConnect();
+		$find = "SELECT * FROM users WHERE id = :id";
+		$stmt = self::$dbc->prepare($find);
+		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
-			if ($this->bindValuesAndExecuteQuery($stmt)) {
-				$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
-				return $stmt->fetch();
-			}
+		if ($this->bindValuesAndExecuteQuery($stmt)) {
+			$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'User');
+			return $stmt->fetch();
 		}
+	}
+	
 	public static function getDB(){
 		self::dbConnect();
 		return self::$dbc;

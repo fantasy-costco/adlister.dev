@@ -13,18 +13,20 @@ body {
 /*Header & Navigation*/
 
 header {
-	height: 160px;
+	height: 120px;
 	display: block;
 	flex-direction: row;
 	background-color: #efefef;
 	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2);
 	margin-bottom: 50px;
+	margin-top: -24px;
+	padding-top: 30px;
 }
 
 aside {
     /* Give the sidebar a default width, and prevent it from shrinking */
     flex-shrink:0;
-    width:100 px;
+    width: 100px;
 }
 
 
@@ -38,7 +40,6 @@ aside {
 
 #main-header-bar {
 	display: flex;
-	position: relative;
 	height: 80px;
 	width: 100%;
 	padding-bottom: 15px;
@@ -46,16 +47,9 @@ aside {
 
 /*Logo*/
 
-#logo-div-top {
-	display: none;
-}
-
 #logo-div {
-	position: relative;
 	width: 25%;
 	height: 70px;
-	float: left;
-	min-width: 309px;
 	padding-left: 30px;
 }
 
@@ -67,22 +61,29 @@ aside {
 
 /*Search Bar*/
 
-#small-search {
-	display: none;
-}
-
 #search-div {
 	width: 100%;
 	height: 30px;
 	background-color: #3071a9;
 	padding: 5px;
 	color: white;
+	position: relative;
+}
+
+div.leftMenu {
+	position: absolute;
+	left: 20px;
+}
+
+div.rightMenu {
+	position: absolute;
+	right: 30px;
 }
 
 #search-bar-div {
 	display: inline;
 	position: relative;
-	width: 70%;
+	width: 50%;
 	height: 80px;
 	float: left;
 }
@@ -90,7 +91,7 @@ aside {
 #search-bar-inner-div {
 	position: relative;
 	width: 100%;
-	height: 80px
+	height: 80px;
 }
 
 #searchbar {
@@ -99,7 +100,7 @@ aside {
 	height: 32px;
 	border: 1px solid #3071a9;
 	padding: 2px;
-	top: 40px
+	top: 28px;
 }
 
 #search-icon {
@@ -107,51 +108,8 @@ aside {
 	width: 20px;
 	z-index: 1;
 	float: right;
-	bottom: -12px;
-	right: 0px;
-}
-
-
-#sign-in-div {
-	display: inline;
-	position: relative;
-	width: 66.66%;
-	height: 32px;
-	float: left;
-	top: 40px;
-	border-right: 1px solid #3071a9;
-}
-
-#sign-in-span {
-	font-size: 1.2em;
-	float: right;
-	padding: 0px 15px 15px 0px;
-}
-
-/*Cart Icon*/
-
-#cart-div {
-	display: inline;
-	position: relative;
-	width: 33.33%;
-	height: 32px;
-	top: 40px;
-	min-width: 101px;
-}
-
-#cart-span {
-	position: relative;
-	font-size: 1.2rem;
-	float: right;
-	padding: 0px 15px 15px 0px;
-
-}
-
-#cart-logo {
-	position: relative;
-	float: right;
-	width: 25px;
-	top: 0px;
+	bottom: 5px;
+	right: -3px;
 }
 
 /*Blue Subnav (List & Option)*/
@@ -163,87 +121,51 @@ aside {
 }
 
 .option {
-	padding: 5px 10px 5px 0;
+	padding: 5px 5px 5px 30px;
 	float: left;
 }
 
-/*Responsive Menu Properties*/
-
-#large-content-menu {
-	display: inline;
-	position: relative;
-	width: 30%;
-	height: 80px;
-	float: left;
-	min-width: 305px
+.option.right {
+	text-align: right;
 }
 
 #medium-content-menu {
 	position: relative;
-	width: 30%;
-	height: 80px;
-	float: left;
-	min-width: 305px;
-	display: none;
+	margin: auto;
+	display: inline;
+	vertical-align: middle;
+	width: 25%;
+	height: 60px;
 }
 
-@media(max-width:1030px) {
-	#large-content-menu {
-		display: none;
-	}
-	#medium-content-menu {
-		display: flex;
-		height: 32px;
-		top: 40px;
-		font-size: .8rem;
-	}
-	.medium-content-item {
-		position: relative;
-		width: 33.33%;
-		height: 80px;
-		height: 32px;
-	}
+.iconDiv {
+	text-align: center;
+	height: 60px;
+	display: inline;
+	position: absolute;
+	top: 8px;
 }
 
-@media(max-width:770px) {
-	.option {
-		display: none;
-	}
-	#logo-div-top {
-		display:inline;
-		width:16.66%;
-	}
-	#logo-div {
-		display:none;
-	}
-	#logo-top {
-		height:30px;
-	}
-	#small-search {
-		display:inline;
-		position:relative;
-		width:20%;
-		background-color:green;
-		padding: 0px 15px 5px 0px;
-		/*flex-shrink:;*/
-	}
-	#main-header-bar {
-		height: 40px;
-		background-color: red;
-		padding: 15px;
-	}
-	#search-div {
-		display: none;
-	}
-	#searchbar {
-		top: 0px;
-	}
-	#search-icon {
-		top: -30px;
-	}
-	#medium-content-menu {
-		top: 0px;
-	}
+.iconDiv.pin {
+	left: 25px;
+}
+
+.iconDiv.user {
+	left: 105px;
+}
+
+.iconDiv.cart {
+	left: 180px;
+}
+
+.iconText {
+	display: block;
+	text-transform: uppercase;
+	font-size: .85em;
+}
+
+.icon {
+	width: 25px;
 }
 
 /*Page Structure*/
@@ -464,6 +386,15 @@ a:hover, a:active, a:visited {
 	color: #444;
 }
 
+.option {
+	color: white;
+	font-weight: 400;
+}
+
+.option:hover, #search-div .option:active, #search-div .option:visited {
+	color: #5bcbfc;
+}
+
 /*Footer*/
 
 footer {
@@ -478,6 +409,7 @@ footer {
 .footerContainer {
 	margin: auto;
 	width: 70%;
+	height: 175px;
 }
 
 /*blue color: #0073a6;*/
