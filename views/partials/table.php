@@ -11,10 +11,10 @@ DOC;
 $output.=populateSidebar($dbc) . '
     	</div>
     	<div class="col-11" style="display:inline;position:relative;height:auto;">' .
-    	generateTable($dbc) .
+    	generateTable($dbc) .'<div><span style="text-align:center' .
     	generatePageLinks(runQuery($dbc,false)) .'
-    	</div>
-    </div></div>';
+    	</span></div>
+    </div></div></div>';
 echo $output;
 }
 function getOffset($dbc,$limit){
@@ -89,7 +89,7 @@ function populateSidebar($dbc){
 	$sidebar='';
 	if(Input::has('search')){
 		if(Input::get('search')=='viewAll'){
-			$searchResults=$dbc->query('SELECT category, count(*) as count FROM items GROUP BY category')->fetchAll(PDO::PARAM_STR);
+			$search=$dbc->query('SELECT category, count(*) as count FROM items GROUP BY category');
 		}else{
 			$search=$dbc->prepare('SELECT category, count(category) as count  FROM items GROUP BY category LIMIT 5 OFFSET ' .  getOffset($dbc,5)*5);
 			$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
@@ -97,9 +97,12 @@ function populateSidebar($dbc){
 			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
 		}
 	}elseif(Input::has('category')){
-
+		$search=$dbc->prepare('SELECT category, count(category) as count  FROM items WHERE category=:category GROUP BY category');
+			$search->bindValue(':category',Input::get('category'),PDO::PARAM_STR);
+			$search->execute();
 	}
-			$sidebar="<a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
+	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+	$sidebar="<a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
 		foreach($searchResults as $key=>$value){
 			$sidebar.='<li><a href=/?search=' . Input::get('search') . '&category=' . $value['category'] .'>' .$value['category'] . '('. $value['count'] .')</a></li>';
 		}
@@ -190,15 +193,16 @@ function generateURL(){
 	return $url;
 }
 function generatePageLinks($itemArray){
-	$pageLinkHTML='';
 	$totalItems=count($itemArray);
 	if($totalItems%5==0){
 		$pages=$totalItems/5;
 	}else{
 		$pages=($totalItems/5)+1;
 	}
+	$pageLinkHTML='<a href="' . generateURL() . '&page=' .(Input::get('page')-1) .'"><</a>';
 	for($i=1;$i<$pages;$i++){
 		$pageLinkHTML.='<a href="' . generateURl() . '&page=' . ($i-1) .'">' . $i . '</a>';
 	}
+	$pageLinkHTML.='<a href="' . generateURL() . '&page=' .(Input::get('page')+1) .'">></a>';
 	return $pageLinkHTML;
 }

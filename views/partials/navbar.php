@@ -56,3 +56,10 @@
 		<span><a href="/?search=viewAll" class="option">See All Products</a></span>
 	</div>
 </header>
+<?php
+if(empty($_REQUEST)){
+echo '<script>
+	var test=document.getElementById("theme");
+	test.play();
+</script>';
+}
