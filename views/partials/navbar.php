@@ -34,6 +34,7 @@
 			<a href="/?category=Misc" class="option">Misc</a>
 		</div>
 		<div class="rightMenu">
+			<a href="#" class="option">Welcome, <?=$_SESSION['IS_LOGGED_IN']?></p>
 			<?php if (isset($_SESSION["LOGGED_IN_ID"])) : ?>
 				<a href="logout.php" class="option">Log Out</a>
 			<?php endif; ?>
