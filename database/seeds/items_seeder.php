@@ -46,7 +46,6 @@ $items=[1 => ['name' =>'Stones of Far Speech','price' => 50,'description' => 'Pl
 $insert=$dbc->prepare("INSERT INTO items (item_name,item_price,img_path,short_description, item_description,keywords,category) VALUES (:name,:price,:img_path,:short_description, :description,:keywords,:category)");
 foreach($items as $key=>$value){
 		if(strlen($value['name'])>0){
-			// $description=$value['description'];
 			$insert->bindValue(':name',$value['name'],PDO::PARAM_STR);
 			$insert->bindValue(':price',(int)$value['price'],PDO::PARAM_INT);
 			$insert->bindValue(':img_path','/img' . '/' . $key . '.png',PDO::PARAM_STR);
