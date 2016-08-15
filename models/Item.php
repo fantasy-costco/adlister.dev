@@ -20,7 +20,7 @@ class Item extends Model {
 			$UploadType = $_FILES['img_path']['type'];
 			$FileSize = $_FILES['img_path']['size'];
 			$UploadName = preg_replace("#[^a-z0-9.]#i", "", $UploadName);
-			
+
 			if(!$this->checkFileType($UploadName)){
 				die('Error - File must be .jpeg or .png');
 			}
@@ -34,7 +34,7 @@ class Item extends Model {
 		 	} else {
 			// Must first figure out where the directory path should be for when uploading files. All uploaded images should be placed in /img directory.
 				$image_url = $this->convert($UploadName);
-				move_uploaded_file($UploadTmp, __DIR__ . '/../public/' . $image_url);
+				move_uploaded_file($UploadTmp, __DIR__ . '/../public' . $image_url);
 				return $image_url;
 			}
 		}
@@ -62,15 +62,18 @@ class Item extends Model {
 
 	public function saveItem() {
 		if (!empty($this->attributes) && isset($this->attributes['item_id'])) {
-				self::updateItem($item_id);
+				self::updateItem($this->attributes['item_id']);
+				$this->saveUploadedImage();
 		} else {
 			$this->insert();
-			$this->saveUploadedImage($this->attributes['img_path']);
+			$this->saveUploadedImage();
+
 		}
 	 }
 
 	 public function updateItem($item_id) {
-		$query = "UPDATE " . static::$table . " SET ";
+		$query = "UPDATE " . "items" . " SET ";
+
 		$first_value = true;
 		foreach ($this->attributes as $key => $value) {
 			if ($key == 'item_id'){
@@ -91,7 +94,7 @@ class Item extends Model {
 			if ($key == 'item_price') {
 				$stmt->bindValue(':' . $key, $value, PDO::PARAM_INT);
 			}
-			if ($key == 'image_path') {
+			if ($key == 'img_path') {
 				$value = $this->saveUploadedImage($value);
 				$stmt->bindValue(':' . $key, $value, PDO::PARAM_STR);
 			}
@@ -153,6 +156,7 @@ class Item extends Model {
 	}
 
 	public function update() {}
+
 	public static function runQuery($query, $limit=false){
 		self::dbConnect();
 		if(empty($_GET)){

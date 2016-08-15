@@ -32,7 +32,7 @@ abstract class Model {
 	public function save() {
 		if ($_REQUEST["submit"] == "register") {
 			$this->saveUser();
-		} elseif ($_REQUEST["submit"] == "add_new_item"){
+		} elseif ($_REQUEST["submit"] == "add_new_item" or $_REQUEST["submit"] == "update"){
 			$this->saveItem();
 		}
 	}
