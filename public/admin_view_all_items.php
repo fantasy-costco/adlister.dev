@@ -14,8 +14,8 @@ function pageController() {
 		$item->item_id = $_REQUEST['id'];
 		$item->delete();
 	} elseif (Input::isPost() && $_REQUEST["submit"] == "edit"){
-		var_dump($_REQUEST['id']);
-		var_dump(false);
+		$item_id = $_REQUEST['id'];
+		header("Location: admin_edit_item.php?item={$item_id}");
 	}
 
 	$items = Item::all();
