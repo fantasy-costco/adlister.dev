@@ -70,9 +70,12 @@ extract(pageController());
 			</div>
 
 			<div class="formButton">
-				<button class="submit" type="submit" name="submit" value="Edit">Edit Account</button>
+				<button class="blueButton" type="submit" name="submit" value="Edit">Save</button>
 			</div>
+		</form>
+	</div>
 
 	<?php require '../views/partials/common_js.php'; ?>
+	<?php require '../views/partials/footer.php'; ?>
 </body>
 </html>

@@ -26,7 +26,9 @@ header {
 aside {
     /* Give the sidebar a default width, and prevent it from shrinking */
     flex-shrink:0;
-    width: 100px;
+    width: 200px;
+    float: left;
+    margin-right: 70px;
 }
 
 
@@ -43,6 +45,7 @@ aside {
 	height: 80px;
 	width: 100%;
 	padding-bottom: 15px;
+	padding-top: 10px;
 }
 
 /*Logo*/
@@ -173,8 +176,9 @@ div.rightMenu {
 .container {
 	margin: auto;
 	padding-bottom: 185px;
-	width: 70%;
+	width: 700px;
 	position: relative;
+	margin-bottom: 20px;
 }
 
 .flex {
@@ -310,6 +314,7 @@ td {
 	font-weight: 400;
 	font-size: .95em;
 	padding: 12px;
+	line-height: 125%;
 }
 
 th, td {
@@ -328,7 +333,7 @@ input {
 }
 
 
-button.blueButton, button.greenButton, input.redButton {
+button.blueButton, button.greenButton, input.redButton, .redButton {
 	color: #fff;
 	font-size: .85em;
 	text-align: center;
@@ -348,7 +353,7 @@ button.blueButton {
 	background-color: #0073a6;
 }	
 
-input.redButton {
+input.redButton, .redButton {
 	background-color: #e31936;
 }
 
@@ -374,6 +379,9 @@ img.img-responsive {
     height: auto;
 }
 
+img.itemImg {
+	width: 300px;
+}
 /*Links*/
 
 a {
