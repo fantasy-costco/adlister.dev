@@ -57,7 +57,7 @@
 	</div>
 </header>
 <?php
-if(empty($_REQUEST)){
+if(empty($_GET)){
 echo '<script>
 	var test=document.getElementById("theme");
 	test.play();
