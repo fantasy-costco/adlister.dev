@@ -394,7 +394,7 @@ a:hover, a:active, a:visited {
 	color: #444;
 }
 
-.option {
+.option, a.userInfo {
 	color: white;
 	font-weight: 400;
 }
