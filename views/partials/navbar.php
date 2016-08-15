@@ -38,13 +38,6 @@
 				<a href="logout.php" class="option">Log Out</a>
 			<?php endif; ?>
 		</div>
-
-		<img id="list-icon" src="/img/interface.png">
-		<span><a href="/?category=Consumable" class="option">Consumables</a></span>
-		<span><a href="/?category=Equipment"class="option">Equipment</a></span>
-		<span><a href="/?category=Misc" class="option">Misc</a></span>
-		<span><a href="/?category=Weapon" class="option">Weapons</a></span>
-		<span><a href="/?search=viewAll" class="option">See All Products</a></span>
 	</div>
 </header>
 <?php
