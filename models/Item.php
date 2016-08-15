@@ -67,11 +67,13 @@ class Item extends Model {
 		} else {
 			$this->insert();
 			$this->saveUploadedImage();
+
 		}
 	 }
 
 	 public function updateItem($item_id) {
 		$query = "UPDATE " . "items" . " SET ";
+
 		$first_value = true;
 		foreach ($this->attributes as $key => $value) {
 			if ($key == 'item_id'){
@@ -154,5 +156,186 @@ class Item extends Model {
 	}
 
 	public function update() {}
+
+	public static function runQuery($query, $limit=false){
+		self::dbConnect();
+		if(empty($_GET)){
+			return '';
+		}
+		$result=self::$dbc->prepare($query);
+		if(Input::has('search') or stripos($query,':searchterm')!=false){
+			$result->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+		}
+		if(Input::has('category') or stripos($query,':category')!=false){
+			$result->bindValue(':category',Input::get('category'),PDO::PARAM_STR);
+		}
+		if(Input::has('min') or stripos($query,':min')!=false){
+			$result->bindValue(':min',Input::get('min'),PDO::PARAM_INT);
+		}
+		if(Input::has('max') or stripos($query,':max')!=false){
+			$result->bindValue(':max',Input::get('min'),PDO::PARAM_INT);
+		}
+		if((Input::get('search')=='viewAll') and count($_GET)==1){
+			$result=self::$dbc->query($query);
+		}else{
+			$result->execute();
+		}
+		$allItems=$result->fetchAll(PDO::FETCH_ASSOC);
+	return $allItems;
+	}
+	public function sidebarQuery(){
+
+	}
+	// protected static function findItemById();
+	public static function generateQuery($limit=true){
+		$query='SELECT * FROM items';
+		if(Input::has('category')){
+			$query.=' WHERE category=:category';
+		}
+		if(Input::has('search')){
+			if(Input::get('search')!='viewAll'){
+				if(stripos($query,'WHERE')==false){
+				$query.=" WHERE ";
+			}else{
+				$query.=" AND ";
+			}
+			$query.='(item_name LIKE :searchterm OR keywords LIKE :searchterm OR item_description LIKE :searchterm)';
+			}
+		}
+		if(Input::has('min')){
+			if(stripos($query,'WHERE')==false){
+				$query.=" WHERE ";
+			}else{
+				$query.=" AND ";
+			}
+			$query.='(item_price >= :min)';
+		}
+		if(Input::has('max')){
+			if(stripos($query,'WHERE')==false){
+				$query.=" WHERE ";
+			}else{
+				$query.=" AND ";
+			}
+			$query.='(item_price <= :max)';
+		}
+		$query.=' ORDER BY item_name ';
+		if($limit){
+			$query.=' LIMIT 5 OFFSET ' . self::getOffset(5) * 5;
+		}
+		return $query;
+	}
+	//Fit to code
+	public static function getOffset($limit){
+		$offset=intval(Input::get('page'));
+		$pageCount=self::pageCount(5);
+		if($offset<0){
+			$offset=0;
+		}elseif($offset>=self::pageCount(5)){
+			$offset=self::pageCount(5)-2;
+		}
+		return $offset;
+	}
+	public static function pageCount($limit){
+		$allItems=self::all();
+		$count=count($allItems)/$limit;
+		if($count%$limit!=0){
+			return $count+1;
+		}
+			return $count;
+	}
+	public static function generateURL(){
+		$url='';
+		if(Input::has('search')){
+			$url.='?search=' . Input::get('search');
+		}
+		if(Input::has('category')){
+			if(strlen($url)>0){
+				$url.='&';
+			}
+			$url.='category=' . Input::get('category');
+		}
+		return $url;
+	}
+	public static function populateSidebar(){
+	self::dbConnect();
+	$sidebar='';
+	if(Input::has('search')){
+		if(Input::get('search')=='viewAll'){
+			$query=('SELECT category, count(*) as count FROM items GROUP BY category');
+			$search=self::$dbc->query($query);
+		}else{
+			$query='SELECT category, count(category) as count  FROM items GROUP BY category LIMIT 5 OFFSET ' .  Item::getOffset(5)*5;
+			$search=self::$dbc->prepare($query);
+			$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+			$search->execute();
+			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+		}
+	}elseif(Input::has('category')){
+		$query='SELECT category, count(category) as count  FROM items WHERE category=:category GROUP BY category';
+			$search=self::$dbc->prepare($query);
+			$search->bindValue(':category',Input::get('category'),PDO::PARAM_STR);
+			$search->execute();
+	}
+	//$searchResults=Item::runQuery($query);
+	$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+	$sidebar="<a href='http://adlister.dev?search=viewAll'>View All</a>\nFilter by Category:\n<ul>";
+		foreach($searchResults as $key=>$value){
+			$sidebar.='<li><a href=/?search=' . Input::get('search') . '&category=' . $value['category'] .'>' .$value['category'] . '('. $value['count'] .')</a></li>';
+		}
+		$sidebar.='</ul>';
+		if(Input::get('search')=='viewAll'){
+			$query='SELECT (
+			SELECT count(*) FROM items
+			WHERE item_price <= 100)as less_than_100,
+			(
+			SELECT count(*) FROM items WHERE item_price > 100 AND item_price <=500) as 100_500,
+			(
+			SELECT count(*) FROM items WHERE (item_price>500 AND item_price <=1000)) as 500_1000,(
+			SELECT count(*) FROM items WHERE item_price>1000) as 1000_';
+			$searchResults=self::$dbc->query($query)->fetchAll(PDO::FETCH_ASSOC);
+		}else{
+			$query='SELECT (
+			SELECT count(*) FROM items
+			WHERE (item_price <= 100) AND (item_name LIKE :searchterm OR keywords LIKE :searchterm))as less_than_100,
+			(
+			SELECT count(*) FROM items WHERE (item_price > 100 AND item_price <=500)
+			AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)) as 100_500,
+			(
+			SELECT count(*) FROM items WHERE (item_price>500 AND item_price <=1000) AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)
+			) as 500_1000,(
+			SELECT count(*) FROM items WHERE item_price>1000 AND (item_name LIKE :searchterm OR keywords LIKE :searchterm)
+			)as 1000_';
+			$search=self::$dbc->prepare($query);
+			$search->bindValue(':searchterm','%' . Input::get('search') . '%',PDO::PARAM_STR);
+			$search->execute();
+			$searchResults=$search->fetchAll(PDO::FETCH_ASSOC);
+		}
+		$sidebar.='Filter By Price<ul>
+		<li><a href="' . Item::generateURl() .'max=100">0-100GP (' . $searchResults[0]['less_than_100'] .')</li></a>
+		<li><a href="' . Item::generateURl() .'&min=100&max=500">100-500GP (' . $searchResults[0]['100_500'] . ')</a></li>
+		<li><a href="' . Item::generateURl() . '&min=500&max=1000">500-1000GP (' . $searchResults[0]['500_1000'] . ')</li></a>
+		<li><a href="' . Item::generateURl() . '&min=1000">1000GP+ (' . $searchResults[0]['1000_'] . ')</li></a>
+		</ul>';
+	return $sidebar;
+}
+public static function generateTable(){
+	$allItems=self::runQuery(self::generateQuery());
+	$body='<table>
+	<th>Picture</th>
+	<th>Item Name</th>
+	<th>Price</th>
+	<th>Short Description</th>';
+	foreach($allItems as $key=>$value){
+		$body.='<tr>
+			<td><a href="/?item=' . $value['item_id'] . '"><img class="productThumb" src="' . $value['img_path'] .'"></a></td>
+			<td><a href="/item.php?item=' . $value['item_id'] . '">' . $value['item_name'] .'</a></td>
+			<td>' . $value['item_price'] . '</td>
+			<td>' . $value['short_description'] . '</td>
+			<td>' . $value['keywords'] . '</td>
+		</tr>';
+	}
+	$body.='</table>';
+	return $body;
+}
 
 }

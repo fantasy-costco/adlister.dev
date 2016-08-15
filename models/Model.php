@@ -55,4 +55,8 @@ abstract class Model {
 				return $stmt->fetch();
 			}
 		}
+	public static function getDB(){
+		self::dbConnect();
+		return self::$dbc;
+	}
 }
